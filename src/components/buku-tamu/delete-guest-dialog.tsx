@@ -1,0 +1,78 @@
+"use client"
+ 
+import * as React from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { TriangleAlertIcon, Loader2Icon } from "lucide-react"
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+
+interface DeleteGuestDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  guestName: string
+  onConfirm: () => void
+}
+
+export function DeleteGuestDialog({
+  open,
+  onOpenChange,
+  guestName,
+  onConfirm,
+}: DeleteGuestDialogProps) {
+  const [isDeleting, setIsDeleting] = React.useState(false)
+
+  const handleConfirm = async () => {
+    setIsDeleting(true)
+    try {
+      await onConfirm()
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+            {isDeleting ? (
+              <Loader2Icon className="h-6 w-6 text-destructive animate-spin" />
+            ) : (
+              <TriangleAlertIcon className="h-6 w-6 text-destructive" />
+            )}
+          </div>
+          <AlertDialogTitle className="text-center">
+            Hapus Data Tamu?
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-center">
+            Apakah Anda yakin ingin menghapus data tamu{" "}
+            <strong className="text-foreground">{guestName}</strong>? Tindakan
+            ini tidak dapat dibatalkan.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="sm:justify-center">
+          <AlertDialogCancel disabled={isDeleting}>Batal</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={(e) => {
+              e.preventDefault()
+              handleConfirm()
+            }}
+            disabled={isDeleting}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90 min-w-[100px]"
+          >
+            {isDeleting ? "Menghapus..." : "Ya, Hapus"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}
