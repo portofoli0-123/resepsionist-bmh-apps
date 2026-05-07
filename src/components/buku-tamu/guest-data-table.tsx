@@ -76,6 +76,7 @@ function toDateInputValue(date: Date): string {
 interface GuestDataTableProps {
   data: Guest[]
   isLoading: boolean
+  isSubmitting?: boolean
   onAdd: (data: any) => void
   onEdit: (id: string, data: any) => void
   onDelete: (id: string) => void
@@ -84,6 +85,7 @@ interface GuestDataTableProps {
 export function GuestDataTable({
   data,
   isLoading,
+  isSubmitting = false,
   onAdd,
   onEdit,
   onDelete,
@@ -376,6 +378,7 @@ export function GuestDataTable({
         <GuestFormDialog
           mode="create"
           open={formOpen && formMode === "create"}
+          isLoading={isSubmitting}
           onOpenChange={(open) => {
             if (open) handleCreate()
             else setFormOpen(false)
@@ -488,6 +491,7 @@ export function GuestDataTable({
           mode="edit"
           guest={editGuest}
           open={formOpen && formMode === "edit"}
+          isLoading={isSubmitting}
           onOpenChange={(open) => {
             if (!open) {
               setFormOpen(false)
@@ -503,6 +507,7 @@ export function GuestDataTable({
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
         guestName={deleteGuest?.nama || ""}
+        isLoading={isSubmitting}
         onConfirm={handleDeleteConfirm}
       />
     </div>

@@ -19,6 +19,7 @@ interface DeleteGuestDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   guestName: string
+  isLoading?: boolean
   onConfirm: () => void
 }
 
@@ -26,17 +27,11 @@ export function DeleteGuestDialog({
   open,
   onOpenChange,
   guestName,
+  isLoading = false,
   onConfirm,
 }: DeleteGuestDialogProps) {
-  const [isDeleting, setIsDeleting] = React.useState(false)
-
   const handleConfirm = async () => {
-    setIsDeleting(true)
-    try {
-      await onConfirm()
-    } finally {
-      setIsDeleting(false)
-    }
+    await onConfirm()
   }
 
   return (
@@ -44,7 +39,7 @@ export function DeleteGuestDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
-            {isDeleting ? (
+            {isLoading ? (
               <Loader2Icon className="h-6 w-6 text-destructive animate-spin" />
             ) : (
               <TriangleAlertIcon className="h-6 w-6 text-destructive" />
@@ -60,16 +55,16 @@ export function DeleteGuestDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="sm:justify-center">
-          <AlertDialogCancel disabled={isDeleting}>Batal</AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>Batal</AlertDialogCancel>
           <AlertDialogAction
             onClick={(e) => {
               e.preventDefault()
               handleConfirm()
             }}
-            disabled={isDeleting}
+            disabled={isLoading}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90 min-w-[100px]"
           >
-            {isDeleting ? "Menghapus..." : "Ya, Hapus"}
+            {isLoading ? "Menghapus..." : "Ya, Hapus"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

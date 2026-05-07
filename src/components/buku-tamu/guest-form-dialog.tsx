@@ -49,6 +49,7 @@ interface GuestFormDialogProps {
   mode: "create" | "edit"
   guest?: Guest | null
   open: boolean
+  isLoading?: boolean
   onOpenChange: (open: boolean) => void
   onSubmit: (data: FormValues) => void
 }
@@ -57,10 +58,10 @@ export function GuestFormDialog({
   mode,
   guest,
   open,
+  isLoading = false,
   onOpenChange,
   onSubmit,
 }: GuestFormDialogProps) {
-  const [isSubmitting, setIsSubmitting] = React.useState(false)
 
   const {
     register,
@@ -102,13 +103,12 @@ export function GuestFormDialog({
   }, [mode, guest, reset, open])
 
   const handleFormSubmit = async (data: FormValues) => {
-    setIsSubmitting(true)
     try {
       await onSubmit(data)
       onOpenChange(false)
       reset()
-    } finally {
-      setIsSubmitting(false)
+    } catch (error) {
+      // Error handled by parent toast
     }
   }
 
@@ -243,16 +243,16 @@ export function GuestFormDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={isSubmitting}
+              disabled={isLoading}
             >
               Batal
             </Button>
             <Button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isLoading}
               className="bg-emerald-700 hover:bg-emerald-800 text-white dark:bg-emerald-600 dark:hover:bg-emerald-700"
             >
-              {isSubmitting ? (
+              {isLoading ? (
                 <>
                   <Loader2Icon className="w-4 h-4 animate-spin" />
                   Menyimpan...

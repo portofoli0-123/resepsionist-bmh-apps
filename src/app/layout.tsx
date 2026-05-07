@@ -32,17 +32,11 @@ export default function RootLayout({
       className={`${fontSans.variable} ${fontHeading.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>
-            {children}
-            <Toaster position="top-center" richColors />
-          </AuthProvider>
-        </ThemeProvider>
+        {/* ThemeProvider dinonaktifkan sementara karena isu kompatibilitas skrip di React 19 */}
+        <AuthProvider>
+          {children}
+          <Toaster position="top-center" richColors />
+        </AuthProvider>
       </body>
     </html>
   );
