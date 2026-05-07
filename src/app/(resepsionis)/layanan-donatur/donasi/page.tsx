@@ -17,9 +17,9 @@ import { Separator } from "@/components/ui/separator"
 const schema = z.object({
   namaDonatur: z.string().min(3, "Nama wajib diisi"),
   noWa: z.string().min(10, "Nomor WA tidak valid"),
-  program: z.string({ required_error: "Pilih program donasi" }),
+  program: z.string({ message: "Pilih program donasi" }),
   nominal: z.string().min(3, "Nominal tidak valid"),
-  metode: z.string({ required_error: "Pilih metode pembayaran" }),
+  metode: z.string({ message: "Pilih metode pembayaran" }),
 })
 
 type FormData = z.infer<typeof schema>

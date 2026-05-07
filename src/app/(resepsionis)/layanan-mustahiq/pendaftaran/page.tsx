@@ -18,7 +18,7 @@ const formSchema = z.object({
   nik: z.string().min(16, "NIK harus 16 digit").max(16, "NIK harus tepat 16 digit"),
   namaLengkap: z.string().min(3, "Nama minimal 3 karakter"),
   alamat: z.string().min(10, "Alamat terlalu singkat"),
-  jenisBantuan: z.string({ required_error: "Pilih jenis bantuan" }),
+  jenisBantuan: z.string({ message: "Pilih jenis bantuan" }),
 })
 
 type FormData = z.infer<typeof formSchema>

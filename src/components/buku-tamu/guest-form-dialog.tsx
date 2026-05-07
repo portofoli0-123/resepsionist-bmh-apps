@@ -37,7 +37,7 @@ const formSchema = z.object({
     .min(1, "Nomor WhatsApp wajib diisi")
     .regex(/^[0-9+\-\s()]+$/, "Format nomor tidak valid"),
   kategori: z.enum(["donatur", "mustahiq", "kerjasama", "lainnya"], {
-    required_error: "Pilih kategori tamu",
+    message: "Pilih kategori tamu",
   }),
   keperluan: z.string().min(1, "Keperluan wajib diisi"),
   instansi: z.string().optional(),
