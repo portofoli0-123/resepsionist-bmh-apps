@@ -16,15 +16,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 import { id } from "date-fns/locale";
+import { DatePicker } from "@/components/ui/date-picker";
+import { MonthPicker } from "@/components/ui/month-picker";
 
 export default function BukuTamuPage() {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Semua Tamu");
-  const [date, setDate] = useState<string>("");
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [month, setMonth] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
 
@@ -51,11 +54,16 @@ export default function BukuTamuPage() {
     
     let matchesDate = true;
     if (date && g.createdAt) {
-      const guestDate = format(g.createdAt.toDate(), "yyyy-MM-dd");
-      matchesDate = guestDate === date;
+      const guestDate = g.createdAt.toDate();
+      matchesDate = isSameDay(guestDate, date);
+    }
+
+    let matchesMonth = true;
+    if (month !== "all" && g.createdAt) {
+      matchesMonth = g.createdAt.toDate().getMonth() === parseInt(month);
     }
     
-    return matchesSearch && matchesCategory && matchesDate;
+    return matchesSearch && matchesCategory && matchesDate && matchesMonth;
   });
 
   const handleAddGuest = async (data: any) => {
@@ -125,7 +133,7 @@ export default function BukuTamuPage() {
       className="space-y-6"
     >
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 font-serif">Buku Tamu</h1>
+        <h1 className="text-3xl font-bold text-emerald-800 font-serif">Buku Tamu</h1>
         <p className="text-gray-500 font-sans">Catat dan kelola data pengunjung gerai secara real-time.</p>
       </div>
 
@@ -179,14 +187,9 @@ export default function BukuTamuPage() {
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-2">
-          <div className="relative w-full md:w-48">
-            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-            <Input
-              type="date"
-              className="pl-10"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
+          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <DatePicker date={date} setDate={setDate} />
+            <MonthPicker month={month} setMonth={setMonth} />
           </div>
 
           <div className="flex items-center gap-2 w-full md:w-auto">

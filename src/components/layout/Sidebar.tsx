@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, X, Users, Settings, ChevronDown, ChevronRight, LayoutDashboard } from "lucide-react";
+import { BookOpen, X, Users, Settings, ChevronDown, ChevronRight, LayoutDashboard, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -25,6 +25,14 @@ export default function Sidebar({ onClose }: SidebarProps) {
       name: "Buku Tamu",
       href: "/buku-tamu",
       icon: BookOpen,
+    },
+    {
+      name: "Pesan Masuk",
+      icon: Mail,
+      children: [
+        { name: "Telepon", href: "/pesan-masuk/telepon" },
+        { name: "Surat", href: "/pesan-masuk/surat" },
+      ]
     },
     {
       name: "Kelola Tamu",
