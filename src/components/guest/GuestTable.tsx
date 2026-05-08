@@ -33,7 +33,8 @@ export default function GuestTable({ guests, loading, onEdit, onDelete }: GuestT
 
   return (
     <div className="border rounded-lg overflow-hidden">
-      <Table>
+      <div className="overflow-x-auto">
+        <Table>
         <TableHeader className="bg-gray-50">
           <TableRow>
             <TableHead className="font-semibold font-serif">Nama</TableHead>
@@ -85,7 +86,8 @@ export default function GuestTable({ guests, loading, onEdit, onDelete }: GuestT
             </TableRow>
           ))}
         </TableBody>
-      </Table>
+        </Table>
+      </div>
     </div>
   );
 }
