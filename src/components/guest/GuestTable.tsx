@@ -4,6 +4,7 @@ import { Guest } from "@/lib/schema";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { Edit2, Trash2 } from "lucide-react";
+import { motion } from "framer-motion";
 import {
   Table,
   TableBody,
@@ -35,17 +36,19 @@ export default function GuestTable({ guests, loading, onEdit, onDelete }: GuestT
       <Table>
         <TableHeader className="bg-gray-50">
           <TableRow>
-            <TableHead className="font-semibold">Nama</TableHead>
-            <TableHead className="font-semibold">Kategori</TableHead>
-            <TableHead className="font-semibold">Keperluan</TableHead>
-            <TableHead className="font-semibold">Waktu / Tanggal</TableHead>
-            <TableHead className="text-right font-semibold">Aksi</TableHead>
+            <TableHead className="font-semibold font-serif">Nama</TableHead>
+            <TableHead className="font-semibold font-serif">No. WhatsApp</TableHead>
+            <TableHead className="font-semibold font-serif">Kategori</TableHead>
+            <TableHead className="font-semibold font-serif">Keperluan</TableHead>
+            <TableHead className="font-semibold font-serif">Waktu / Tanggal</TableHead>
+            <TableHead className="text-right font-semibold font-serif">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {guests.map((guest) => (
             <TableRow key={guest.id} className="hover:bg-gray-50/50 transition-colors">
               <TableCell className="font-medium text-gray-900">{guest.nama}</TableCell>
+              <TableCell className="text-gray-600">{(guest as any).whatsapp || "-"}</TableCell>
               <TableCell>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   guest.kategori === 'Donatur' ? 'bg-blue-100 text-blue-800' :

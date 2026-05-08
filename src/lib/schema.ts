@@ -4,10 +4,11 @@ export const CATEGORIES = ["Donatur", "Mustahiq", "Kunjungan & Lainnya"] as cons
 
 export const guestSchema = z.object({
   nama: z.string().min(3, "Nama minimal 3 karakter"),
+  whatsapp: z.string().optional(),
   kategori: z.enum(CATEGORIES, {
     errorMap: () => ({ message: "Pilih kategori yang valid" }),
   }),
-  keperluan: z.string().min(5, "Keperluan minimal 5 karakter"),
+  keperluan: z.string().optional(),
   waktu: z.any().optional(), // Firestore Timestamp
 });
 

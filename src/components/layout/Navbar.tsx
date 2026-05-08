@@ -1,10 +1,16 @@
 "use client";
 
 import { User } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Navbar() {
   return (
-    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 sticky top-0 z-10">
+    <motion.header 
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 sticky top-0 z-10"
+    >
       <div className="flex items-center gap-2">
         <span className="text-sm text-gray-500">Selamat Datang,</span>
         <span className="text-sm font-semibold text-gray-900">Admin Resepsionis</span>
@@ -14,6 +20,6 @@ export default function Navbar() {
           <User className="w-5 h-5" />
         </button>
       </div>
-    </header>
+    </motion.header>
   );
 }

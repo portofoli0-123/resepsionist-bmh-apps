@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -17,10 +18,15 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0">
+    <motion.aside 
+      initial={{ x: -20, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="w-64 bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0"
+    >
       <div className="p-6">
-        <h1 className="text-xl font-bold text-emerald-600 flex items-center gap-2">
-          <span className="bg-emerald-600 text-white p-1 rounded">R</span>
+        <h1 className="text-xl font-bold text-emerald-600 flex items-center gap-2 font-serif">
+          <span className="bg-emerald-600 text-white p-1 rounded font-sans">R</span>
           Resepsionis
         </h1>
       </div>
@@ -47,6 +53,6 @@ export default function Sidebar() {
           <p className="text-xs text-emerald-600 mt-1">Dashboard Resepsionis</p>
         </div>
       </div>
-    </aside>
+    </motion.aside>
   );
 }

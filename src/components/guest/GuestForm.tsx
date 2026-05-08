@@ -41,6 +41,7 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
     resolver: zodResolver(guestSchema),
     defaultValues: {
       nama: "",
+      whatsapp: "",
       kategori: "" as any,
       keperluan: "",
     },
@@ -50,12 +51,14 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
     if (initialData) {
       reset({
         nama: initialData.nama,
+        whatsapp: (initialData as any).whatsapp || "",
         kategori: initialData.kategori,
-        keperluan: initialData.keperluan,
+        keperluan: initialData.keperluan || "",
       });
     } else {
       reset({
         nama: "",
+        whatsapp: "",
         kategori: "" as any,
         keperluan: "",
       });
@@ -72,7 +75,7 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{initialData ? "Edit Data Tamu" : "Tambah Tamu Baru"}</DialogTitle>
+          <DialogTitle className="font-serif text-xl">{initialData ? "Edit Data Tamu" : "Tambah Tamu Baru"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4 py-4">
           <div className="space-y-2">
@@ -84,6 +87,17 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
               className={errors.nama ? "border-red-500" : ""}
             />
             {errors.nama && <p className="text-xs text-red-500">{errors.nama.message as string}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="whatsapp">No. WhatsApp (Opsional)</Label>
+            <Input
+              id="whatsapp"
+              placeholder="Contoh: 08123456789"
+              {...register("whatsapp")}
+              className={errors.whatsapp ? "border-red-500" : ""}
+            />
+            {errors.whatsapp && <p className="text-xs text-red-500">{errors.whatsapp.message as string}</p>}
           </div>
 
           <div className="space-y-2">
@@ -107,7 +121,7 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="keperluan">Keperluan</Label>
+            <Label htmlFor="keperluan">Keperluan (Opsional)</Label>
             <Input
               id="keperluan"
               placeholder="Contoh: Silaturahmi, Donasi, dll..."

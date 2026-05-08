@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Montserrat, Lora } from "next/font/google";
 import "./globals.css";
 
-const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta" });
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const montserrat = Montserrat({ 
+  subsets: ["latin"], 
+  variable: "--font-sans",
+  weight: ["300", "400", "500", "600", "700"]
+});
+
+const lora = Lora({ 
+  subsets: ["latin"], 
+  variable: "--font-serif",
+  weight: ["400", "500", "600", "700"]
+});
 
 export const metadata: Metadata = {
   title: "Dashboard Resepsionis",
@@ -17,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body className={`${plusJakartaSans.variable} ${inter.variable} font-sans antialiased`}>
+      <body className={`${montserrat.variable} ${lora.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>
