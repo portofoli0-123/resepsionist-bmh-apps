@@ -11,6 +11,8 @@ import GuestForm from "@/components/guest/GuestForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -128,24 +130,30 @@ export default function BukuTamuPage() {
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center w-full md:w-auto">
-            <Tabs defaultValue="Semua Tamu" onValueChange={setCategory} className="w-full md:w-auto">
-              <TabsList className="bg-gray-100 p-1">
-                <TabsTrigger value="Semua Tamu">Semua Tamu</TabsTrigger>
-                {CATEGORIES.map((cat) => (
-                  <TabsTrigger key={cat} value={cat}>{cat}</TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-            
-            <div className="relative w-full md:w-48">
-              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-              <Input
-                type="date"
-                className="pl-10"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
+            <div className="w-full md:w-auto">
+              <div className="md:hidden">
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger className="w-full bg-gray-50 border-gray-200">
+                    <SelectValue placeholder="Pilih Kategori" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Semua Tamu">Semua Tamu</SelectItem>
+                    {CATEGORIES.map((cat) => (
+                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <Tabs value={category} onValueChange={setCategory} className="hidden md:block w-full md:w-auto">
+                <TabsList className="bg-gray-100 p-1">
+                  <TabsTrigger value="Semua Tamu">Semua Tamu</TabsTrigger>
+                  {CATEGORIES.map((cat) => (
+                    <TabsTrigger key={cat} value={cat}>{cat}</TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
             </div>
+
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
@@ -168,15 +176,37 @@ export default function BukuTamuPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleExportExcel} className="gap-2 flex-1 sm:flex-none">
-            <FileDown className="w-4 h-4" />
-            Excel
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleExportPDF} className="gap-2 flex-1 sm:flex-none">
-            <TableIcon className="w-4 h-4" />
-            PDF
-          </Button>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-2">
+          <div className="relative w-full md:w-48">
+            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+            <Input
+              type="date"
+              className="pl-10"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+
+          <div className="flex items-center gap-2 w-full md:w-auto">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleExportExcel} 
+              className="gap-2 flex-1 sm:flex-none transition-all duration-300 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 group"
+            >
+              <FileDown className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
+              Excel
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleExportPDF} 
+              className="gap-2 flex-1 sm:flex-none transition-all duration-300 hover:bg-red-600 hover:text-white hover:border-red-600 group"
+            >
+              <TableIcon className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
+              PDF
+            </Button>
+          </div>
         </div>
 
         <GuestTable 

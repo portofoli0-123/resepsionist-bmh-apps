@@ -9,10 +9,7 @@ interface NavbarProps {
 
 export default function Navbar({ onMenuClick }: NavbarProps) {
   return (
-    <motion.header 
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
+    <header 
       className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 md:px-8 sticky top-0 z-10"
     >
       <div className="flex items-center gap-4">
@@ -32,6 +29,6 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
           <User className="w-5 h-5" />
         </button>
       </div>
-    </motion.header>
+    </header>
   );
 }
