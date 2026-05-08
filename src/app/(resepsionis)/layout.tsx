@@ -1,13 +1,17 @@
-import { Sidebar } from "@/components/shared/Sidebar"
-import { Navbar } from "@/components/shared/Navbar"
+import Sidebar from "@/components/layout/Sidebar";
+import Navbar from "@/components/layout/Navbar";
 
-export default function ResepsionisLayout({ children }: { children: React.ReactNode }) {
+export default function ResepsionisLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      <Sidebar basePath="/resepsionis" roleName="Resepsionis" />
-      <div className="flex-1 flex flex-col min-w-0">
-        <Navbar roleName="Resepsionis" />
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <div className="flex-1 flex flex-col">
+        <Navbar />
+        <main className="flex-1 p-6 overflow-y-auto bg-[#F7F7F7]">
           {children}
         </main>
       </div>

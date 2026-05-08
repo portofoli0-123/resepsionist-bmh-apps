@@ -1,23 +1,13 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/shared/ThemeProvider";
-import { AuthProvider } from "@/context/AuthContext";
-import { Toaster } from "sonner";
 
-const fontHeading = Plus_Jakarta_Sans({
-  variable: "--font-heading",
-  subsets: ["latin"],
-});
-
-const fontSans = Inter({
-  variable: "--font-sans",
-  subsets: ["latin"],
-});
+const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Dashboard Resepsionis BMH",
-  description: "Aplikasi Dashboard Resepsionis BMH Nasional",
+  title: "Dashboard Resepsionis",
+  description: "Aplikasi Buku Tamu Resepsionis",
 };
 
 export default function RootLayout({
@@ -26,17 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${fontSans.variable} ${fontHeading.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col font-sans">
-        {/* ThemeProvider dinonaktifkan sementara karena isu kompatibilitas skrip di React 19 */}
-        <AuthProvider>
-          {children}
-          <Toaster position="top-center" richColors />
-        </AuthProvider>
+    <html lang="id">
+      <body className={`${plusJakartaSans.variable} ${inter.variable} font-sans antialiased`}>
+        {children}
       </body>
     </html>
   );
