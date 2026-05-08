@@ -9,6 +9,7 @@ export const guestSchema = z.object({
     errorMap: () => ({ message: "Pilih kategori yang valid" }),
   }),
   keperluan: z.string().optional(),
+  institusi: z.string().optional(),
   waktu: z.any().optional(), // Firestore Timestamp
 });
 

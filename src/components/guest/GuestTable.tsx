@@ -38,18 +38,18 @@ export default function GuestTable({ guests, loading, onEdit, onDelete }: GuestT
         <TableHeader className="bg-gray-50">
           <TableRow>
             <TableHead className="font-semibold font-serif">Nama</TableHead>
-            <TableHead className="font-semibold font-serif">No. WhatsApp</TableHead>
             <TableHead className="font-semibold font-serif">Kategori</TableHead>
             <TableHead className="font-semibold font-serif">Keperluan</TableHead>
             <TableHead className="font-semibold font-serif">Waktu / Tanggal</TableHead>
+            <TableHead className="font-semibold font-serif">Institusi</TableHead>
+            <TableHead className="font-semibold font-serif">No. WhatsApp</TableHead>
             <TableHead className="text-right font-semibold font-serif">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {guests.map((guest) => (
             <TableRow key={guest.id} className="hover:bg-gray-50/50 transition-colors">
-              <TableCell className="font-medium text-gray-900">{guest.nama}</TableCell>
-              <TableCell className="text-gray-600">{(guest as any).whatsapp || "-"}</TableCell>
+              <TableCell className="text-gray-900 font-medium">{guest.nama}</TableCell>
               <TableCell>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   guest.kategori === 'Donatur' ? 'bg-blue-100 text-blue-800' :
@@ -63,6 +63,8 @@ export default function GuestTable({ guests, loading, onEdit, onDelete }: GuestT
               <TableCell className="text-gray-500 text-sm">
                 {guest.createdAt ? format(guest.createdAt.toDate(), "HH.mm / dd MMMM yyyy", { locale: id }) : "-"}
               </TableCell>
+              <TableCell className="text-gray-600">{(guest as any).institusi || "-"}</TableCell>
+              <TableCell className="text-gray-600">{(guest as any).whatsapp || "-"}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
                   <Button

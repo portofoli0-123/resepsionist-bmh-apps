@@ -87,10 +87,11 @@ export default function BukuTamuPage() {
   const handleExportExcel = () => {
     const exportData = filteredGuests.map(g => ({
       Nama: g.nama,
-      "No. WhatsApp": (g as any).whatsapp || "-",
       Kategori: g.kategori,
       Keperluan: g.keperluan || "-",
-      Waktu: g.createdAt ? format(g.createdAt.toDate(), "HH.mm / dd MMMM yyyy", { locale: id }) : "-"
+      Waktu: g.createdAt ? format(g.createdAt.toDate(), "HH.mm / dd MMMM yyyy", { locale: id }) : "-",
+      Institusi: (g as any).institusi || "-",
+      "No. WhatsApp": (g as any).whatsapp || "-",
     }));
     const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
@@ -103,13 +104,14 @@ export default function BukuTamuPage() {
     doc.text("Laporan Buku Tamu", 14, 15);
     autoTable(doc, {
       startY: 20,
-      head: [['Nama', 'No. WhatsApp', 'Kategori', 'Keperluan', 'Waktu']],
+      head: [['Nama', 'Kategori', 'Keperluan', 'Waktu', 'Institusi', 'No. WhatsApp']],
       body: filteredGuests.map(g => [
         g.nama, 
-        (g as any).whatsapp || "-",
         g.kategori, 
         g.keperluan || "-", 
-        g.createdAt ? format(g.createdAt.toDate(), "HH.mm / dd MMMM yyyy", { locale: id }) : "-"
+        g.createdAt ? format(g.createdAt.toDate(), "HH.mm / dd MMMM yyyy", { locale: id }) : "-",
+        (g as any).institusi || "-",
+        (g as any).whatsapp || "-",
       ]),
     });
     doc.save(`Buku_Tamu_${format(new Date(), "yyyy-MM-dd")}.pdf`);

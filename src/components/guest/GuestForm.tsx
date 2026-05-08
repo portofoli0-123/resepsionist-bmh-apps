@@ -44,6 +44,7 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
       whatsapp: "",
       kategori: "" as any,
       keperluan: "",
+      institusi: "",
     },
   });
 
@@ -54,6 +55,7 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
         whatsapp: (initialData as any).whatsapp || "",
         kategori: initialData.kategori,
         keperluan: initialData.keperluan || "",
+        institusi: (initialData as any).institusi || "",
       });
     } else {
       reset({
@@ -61,6 +63,7 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
         whatsapp: "",
         kategori: "" as any,
         keperluan: "",
+        institusi: "",
       });
     }
   }, [initialData, reset]);
@@ -129,6 +132,17 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
               className={errors.keperluan ? "border-red-500" : ""}
             />
             {errors.keperluan && <p className="text-xs text-red-500">{errors.keperluan.message as string}</p>}
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="institusi">Institusi / Lembaga (Opsional)</Label>
+            <Input
+              id="institusi"
+              placeholder="Contoh: PT. Maju Jaya, Sekolah ABC, dll..."
+              {...register("institusi")}
+              className={errors.institusi ? "border-red-500" : ""}
+            />
+            {errors.institusi && <p className="text-xs text-red-500">{errors.institusi.message as string}</p>}
           </div>
 
           <DialogFooter className="pt-4">
