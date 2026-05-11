@@ -17,6 +17,9 @@ const lora = Lora({
 export const metadata: Metadata = {
   title: "Dashboard Resepsionis",
   description: "Aplikasi Buku Tamu Resepsionis",
+  icons: {
+    icon: "/bmh.ico",
+  },
 };
 
 export default function RootLayout({
