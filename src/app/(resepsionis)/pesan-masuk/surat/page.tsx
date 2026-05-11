@@ -45,12 +45,12 @@ export default function SuratPage() {
   }, []);
 
   const filteredData = suratList.filter((s) => {
-    const matchesSearch = 
-      (s.jenisDokumen || "").toLowerCase().includes(search.toLowerCase()) || 
+    const matchesSearch =
+      (s.jenisDokumen || "").toLowerCase().includes(search.toLowerCase()) ||
       (s.kodeDokumen || "").toLowerCase().includes(search.toLowerCase()) ||
       (s.namaPengirim || "").toLowerCase().includes(search.toLowerCase()) ||
       (s.ditujukanKepada || "").toLowerCase().includes(search.toLowerCase());
-    
+
     let matchesDate = true;
     if (date && s.createdAt) {
       const sDate = s.createdAt.toDate();
@@ -61,7 +61,7 @@ export default function SuratPage() {
     if (month !== "all" && s.createdAt) {
       matchesMonth = s.createdAt.toDate().getMonth() === parseInt(month);
     }
-    
+
     return matchesSearch && matchesDate && matchesMonth;
   });
 
@@ -120,12 +120,12 @@ export default function SuratPage() {
         index + 1,
         s.tanggal ? format(new Date(s.tanggal), "dd MMM yyyy", { locale: idLocale }) : "-",
         s.jam || "-",
-        s.jenisDokumen, 
-        s.kodeDokumen || "-", 
-        s.namaPengirim, 
-        s.ditujukanKepada, 
+        s.jenisDokumen || "-",
+        s.kodeDokumen || "-",
+        s.namaPengirim || "-",
+        s.ditujukanKepada || "-",
         s.tanggalMasuk ? format(new Date(s.tanggalMasuk), "dd MMM yyyy", { locale: idLocale }) : "-",
-        s.diserahkanKepada,
+        s.diserahkanKepada || "-",
         s.tanggalDiserahkan ? format(new Date(s.tanggalDiserahkan), "dd MMM yyyy", { locale: idLocale }) : "-",
       ]),
       styles: { fontSize: 8 },
@@ -151,7 +151,7 @@ export default function SuratPage() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <Button 
+          <Button
             className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 w-full sm:w-auto"
             onClick={() => { setEditingData(null); setIsDialogOpen(true); }}
           >
@@ -167,19 +167,19 @@ export default function SuratPage() {
           </div>
 
           <div className="flex items-center gap-2 w-full md:w-auto">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleExportExcel} 
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExportExcel}
               className="gap-2 flex-1 sm:flex-none transition-all duration-300 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 group"
             >
               <FileDown className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
               Excel
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleExportPDF} 
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExportPDF}
               className="gap-2 flex-1 sm:flex-none transition-all duration-300 hover:bg-red-600 hover:text-white hover:border-red-600 group"
             >
               <TableIcon className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
@@ -188,9 +188,9 @@ export default function SuratPage() {
           </div>
         </div>
 
-        <SuratTable 
-          suratList={filteredData} 
-          loading={loading} 
+        <SuratTable
+          suratList={filteredData}
+          loading={loading}
           onView={(s) => { setViewingData(s); setIsDetailOpen(true); }}
           onEdit={(s) => { setEditingData(s); setIsDialogOpen(true); }}
           onDelete={handleDelete}
@@ -198,15 +198,15 @@ export default function SuratPage() {
       </div>
 
       {isDialogOpen && (
-        <SuratForm 
-          isOpen={isDialogOpen} 
-          onClose={() => setIsDialogOpen(false)} 
+        <SuratForm
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
           onSubmit={handleAdd}
           initialData={editingData}
         />
       )}
 
-      <SuratDetailModal 
+      <SuratDetailModal
         isOpen={isDetailOpen}
         onClose={() => setIsDetailOpen(false)}
         data={viewingData}
