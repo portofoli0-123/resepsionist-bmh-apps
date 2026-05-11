@@ -94,8 +94,10 @@ export default function SuratPage() {
   const handleExportExcel = () => {
     const exportData = filteredData.map((s, index) => ({
       "NO": index + 1,
+      "TANGGAL": s.tanggal ? format(new Date(s.tanggal), "dd MMM yyyy", { locale: idLocale }) : "-",
+      "JAM": s.jam || "-",
       "JENIS DOKUMEN": s.jenisDokumen,
-      "KODE DOKUMEN": s.kodeDokumen,
+      "KODE DOKUMEN": s.kodeDokumen || "-",
       "NAMA PENGIRIM": s.namaPengirim,
       "DI TUJUKAN KEPADA": s.ditujukanKepada,
       "TANGGAL MASUK DOKUMEN": s.tanggalMasuk ? format(new Date(s.tanggalMasuk), "dd MMM yyyy", { locale: idLocale }) : "-",
@@ -113,11 +115,13 @@ export default function SuratPage() {
     doc.text("Laporan Log Surat Masuk", 14, 15);
     autoTable(doc, {
       startY: 20,
-      head: [['NO', 'JENIS DOKUMEN', 'KODE DOKUMEN', 'PENGIRIM', 'DITUJUKAN', 'TGL. MASUK', 'DISERAHKAN KE', 'TGL. DISERAHKAN']],
+      head: [['NO', 'TANGGAL', 'JAM', 'JENIS DOKUMEN', 'KODE DOKUMEN', 'PENGIRIM', 'DITUJUKAN', 'TGL. MASUK', 'DISERAHKAN KE', 'TGL. DISERAHKAN']],
       body: filteredData.map((s, index) => [
         index + 1,
+        s.tanggal ? format(new Date(s.tanggal), "dd MMM yyyy", { locale: idLocale }) : "-",
+        s.jam || "-",
         s.jenisDokumen, 
-        s.kodeDokumen, 
+        s.kodeDokumen || "-", 
         s.namaPengirim, 
         s.ditujukanKepada, 
         s.tanggalMasuk ? format(new Date(s.tanggalMasuk), "dd MMM yyyy", { locale: idLocale }) : "-",

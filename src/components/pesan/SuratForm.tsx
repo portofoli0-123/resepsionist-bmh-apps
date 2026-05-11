@@ -9,6 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Surat, SuratInput, suratSchema } from "@/lib/schema-pesan";
 
+function getTodayDate() {
+  const now = new Date();
+  return now.toISOString().split("T")[0]; // YYYY-MM-DD
+}
+
 interface SuratFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -33,6 +38,8 @@ export default function SuratForm({ isOpen, onClose, onSubmit, initialData }: Su
       tanggalMasuk: initialData?.tanggalMasuk || "",
       diserahkanKepada: initialData?.diserahkanKepada || "",
       tanggalDiserahkan: initialData?.tanggalDiserahkan || "",
+      tanggal: initialData?.tanggal || getTodayDate(),
+      jam: initialData?.jam || "",
     },
   });
 
@@ -55,6 +62,18 @@ export default function SuratForm({ isOpen, onClose, onSubmit, initialData }: Su
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4 pt-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="tanggal">Tanggal</Label>
+              <Input type="date" id="tanggal" {...register("tanggal")} className={errors.tanggal ? "border-red-500" : ""} />
+              {errors.tanggal && <p className="text-xs text-red-500">{errors.tanggal.message}</p>}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="jam">Jam (Opsional)</Label>
+              <Input type="time" id="jam" {...register("jam")} />
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="jenisDokumen">Jenis Dokumen</Label>
             <Input id="jenisDokumen" {...register("jenisDokumen")} className={errors.jenisDokumen ? "border-red-500" : ""} />
@@ -62,9 +81,8 @@ export default function SuratForm({ isOpen, onClose, onSubmit, initialData }: Su
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="kodeDokumen">Kode Dokumen</Label>
-            <Input id="kodeDokumen" {...register("kodeDokumen")} className={errors.kodeDokumen ? "border-red-500" : ""} />
-            {errors.kodeDokumen && <p className="text-xs text-red-500">{errors.kodeDokumen.message}</p>}
+            <Label htmlFor="kodeDokumen">Kode Dokumen (Opsional)</Label>
+            <Input id="kodeDokumen" {...register("kodeDokumen")} />
           </div>
 
           <div className="space-y-2">
@@ -86,9 +104,8 @@ export default function SuratForm({ isOpen, onClose, onSubmit, initialData }: Su
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="diserahkanKepada">Diserahkan Kepada</Label>
-            <Input id="diserahkanKepada" {...register("diserahkanKepada")} className={errors.diserahkanKepada ? "border-red-500" : ""} />
-            {errors.diserahkanKepada && <p className="text-xs text-red-500">{errors.diserahkanKepada.message}</p>}
+            <Label htmlFor="diserahkanKepada">Diserahkan Kepada (Opsional)</Label>
+            <Input id="diserahkanKepada" {...register("diserahkanKepada")} />
           </div>
 
           <div className="space-y-2">

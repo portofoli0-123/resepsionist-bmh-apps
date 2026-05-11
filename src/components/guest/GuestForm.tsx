@@ -22,6 +22,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+function getTodayDate() {
+  const now = new Date();
+  return now.toISOString().split("T")[0]; // YYYY-MM-DD
+}
+
 interface GuestFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -45,6 +50,8 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
       kategori: "" as any,
       keperluan: "",
       institusi: "",
+      tanggal: getTodayDate(),
+      jam: "",
     },
   });
 
@@ -56,6 +63,8 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
         kategori: initialData.kategori,
         keperluan: initialData.keperluan || "",
         institusi: (initialData as any).institusi || "",
+        tanggal: (initialData as any).tanggal || getTodayDate(),
+        jam: (initialData as any).jam || "",
       });
     } else {
       reset({
@@ -64,6 +73,8 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
         kategori: "" as any,
         keperluan: "",
         institusi: "",
+        tanggal: getTodayDate(),
+        jam: "",
       });
     }
   }, [initialData, reset]);
@@ -81,6 +92,27 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
           <DialogTitle className="font-serif text-xl">{initialData ? "Edit Data Tamu" : "Tambah Tamu Baru"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4 py-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="tanggal">Tanggal</Label>
+              <Input
+                type="date"
+                id="tanggal"
+                {...register("tanggal")}
+                className={errors.tanggal ? "border-red-500" : ""}
+              />
+              {errors.tanggal && <p className="text-xs text-red-500">{errors.tanggal.message as string}</p>}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="jam">Jam (Opsional)</Label>
+              <Input
+                type="time"
+                id="jam"
+                {...register("jam")}
+              />
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="nama">Nama Lengkap</Label>
             <Input

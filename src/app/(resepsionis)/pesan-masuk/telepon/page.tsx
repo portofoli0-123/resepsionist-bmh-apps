@@ -90,8 +90,10 @@ export default function TeleponPage() {
   const handleExportExcel = () => {
     const exportData = filteredData.map((t, index) => ({
       "NO": index + 1,
+      "TANGGAL": t.tanggal ? format(new Date(t.tanggal), "dd MMM yyyy", { locale: idLocale }) : 
+        t.createdAt ? format(t.createdAt.toDate(), "dd MMM yyyy", { locale: idLocale }) : "-",
+      "JAM": t.jam || "-",
       "NAMA": t.nama,
-      "TANGGAL": t.createdAt ? format(t.createdAt.toDate(), "dd MMM yyyy", { locale: idLocale }) : "-",
       "NO. TELEPON": t.nomorTelepon,
       "KEPERLUAN": t.keperluan,
       "KETERANGAN": t.keterangan || "-",
@@ -107,11 +109,13 @@ export default function TeleponPage() {
     doc.text("Laporan Log Telepon", 14, 15);
     autoTable(doc, {
       startY: 20,
-      head: [['NO', 'NAMA', 'TANGGAL', 'NO. TELEPON', 'KEPERLUAN', 'KETERANGAN']],
+      head: [['NO', 'TANGGAL', 'JAM', 'NAMA', 'NO. TELEPON', 'KEPERLUAN', 'KETERANGAN']],
       body: filteredData.map((t, index) => [
         index + 1,
+        t.tanggal ? format(new Date(t.tanggal), "dd MMM yyyy", { locale: idLocale }) : 
+          t.createdAt ? format(t.createdAt.toDate(), "dd MMM yyyy", { locale: idLocale }) : "-",
+        t.jam || "-",
         t.nama, 
-        t.createdAt ? format(t.createdAt.toDate(), "dd MMM yyyy", { locale: idLocale }) : "-",
         t.nomorTelepon, 
         t.keperluan,
         t.keterangan || "-", 

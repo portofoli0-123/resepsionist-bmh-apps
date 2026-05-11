@@ -37,8 +37,9 @@ export default function TeleponTable({ teleponList, loading, onEdit, onDelete }:
           <TableHeader className="bg-gray-50">
             <TableRow>
               <TableHead className="font-semibold font-serif w-12 text-center">No</TableHead>
-              <TableHead className="font-semibold font-serif">Nama</TableHead>
               <TableHead className="font-semibold font-serif">Tanggal</TableHead>
+              <TableHead className="font-semibold font-serif">Jam</TableHead>
+              <TableHead className="font-semibold font-serif">Nama</TableHead>
               <TableHead className="font-semibold font-serif">No. Telepon</TableHead>
               <TableHead className="font-semibold font-serif">Keperluan</TableHead>
               <TableHead className="font-semibold font-serif">Keterangan</TableHead>
@@ -49,10 +50,12 @@ export default function TeleponTable({ teleponList, loading, onEdit, onDelete }:
             {teleponList.map((t, index) => (
               <TableRow key={t.id} className="hover:bg-gray-50/50 transition-colors">
                 <TableCell className="text-center text-gray-500 font-medium">{index + 1}</TableCell>
-                <TableCell className="text-gray-900 font-medium">{t.nama}</TableCell>
                 <TableCell className="text-gray-500 text-sm">
-                  {t.createdAt ? format(t.createdAt.toDate(), "dd MMM yyyy", { locale: id }) : "-"}
+                  {t.tanggal ? format(new Date(t.tanggal), "dd MMM yyyy", { locale: id }) : 
+                    t.createdAt ? format(t.createdAt.toDate(), "dd MMM yyyy", { locale: id }) : "-"}
                 </TableCell>
+                <TableCell className="text-gray-500 text-sm">{t.jam || "-"}</TableCell>
+                <TableCell className="text-gray-900 font-medium">{t.nama}</TableCell>
                 <TableCell className="text-gray-600">{t.nomorTelepon}</TableCell>
                 <TableCell className="text-gray-600">{t.keperluan}</TableCell>
                 <TableCell className="text-gray-600 max-w-xs truncate">{t.keterangan || "-"}</TableCell>

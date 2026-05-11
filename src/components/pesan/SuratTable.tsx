@@ -38,6 +38,8 @@ export default function SuratTable({ suratList, loading, onView, onEdit, onDelet
           <TableHeader className="bg-gray-50">
             <TableRow>
               <TableHead className="font-semibold font-serif w-12 text-center">No</TableHead>
+              <TableHead className="font-semibold font-serif">Tanggal</TableHead>
+              <TableHead className="font-semibold font-serif">Jam</TableHead>
               <TableHead className="font-semibold font-serif">Jenis Dokumen</TableHead>
               <TableHead className="font-semibold font-serif">Kode Dokumen</TableHead>
               <TableHead className="font-semibold font-serif">Nama Pengirim</TableHead>
@@ -52,8 +54,12 @@ export default function SuratTable({ suratList, loading, onView, onEdit, onDelet
             {suratList.map((s, index) => (
               <TableRow key={s.id} className="hover:bg-gray-50/50 transition-colors">
                 <TableCell className="text-center text-gray-500 font-medium">{index + 1}</TableCell>
+                <TableCell className="text-gray-500 text-sm">
+                  {s.tanggal ? format(new Date(s.tanggal), "dd MMM yyyy", { locale: id }) : "-"}
+                </TableCell>
+                <TableCell className="text-gray-500 text-sm">{s.jam || "-"}</TableCell>
                 <TableCell className="text-gray-900 font-medium">{s.jenisDokumen}</TableCell>
-                <TableCell className="text-gray-600">{s.kodeDokumen}</TableCell>
+                <TableCell className="text-gray-600">{s.kodeDokumen || "-"}</TableCell>
                 <TableCell className="text-gray-600">{s.namaPengirim}</TableCell>
                 <TableCell className="text-gray-600">{s.ditujukanKepada}</TableCell>
                 <TableCell className="text-gray-500 text-sm">

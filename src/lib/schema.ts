@@ -11,6 +11,8 @@ export const guestSchema = z.object({
   keperluan: z.string().optional(),
   institusi: z.string().optional(),
   waktu: z.any().optional(), // Firestore Timestamp
+  tanggal: z.string().min(1, "Tanggal harus diisi"),
+  jam: z.string().optional(),
 });
 
 export type Guest = z.infer<typeof guestSchema> & { id: string; createdAt: any };

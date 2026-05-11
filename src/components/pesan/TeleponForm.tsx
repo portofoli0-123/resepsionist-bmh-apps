@@ -9,6 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Telepon, TeleponInput, teleponSchema } from "@/lib/schema-pesan";
 
+function getTodayDate() {
+  const now = new Date();
+  return now.toISOString().split("T")[0]; // YYYY-MM-DD
+}
+
 interface TeleponFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -30,6 +35,8 @@ export default function TeleponForm({ isOpen, onClose, onSubmit, initialData }: 
       nomorTelepon: initialData?.nomorTelepon || "",
       keperluan: initialData?.keperluan || "",
       keterangan: initialData?.keterangan || "",
+      tanggal: initialData?.tanggal || getTodayDate(),
+      jam: initialData?.jam || "",
     },
   });
 
@@ -52,6 +59,18 @@ export default function TeleponForm({ isOpen, onClose, onSubmit, initialData }: 
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4 pt-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="tanggal">Tanggal</Label>
+              <Input type="date" id="tanggal" {...register("tanggal")} className={errors.tanggal ? "border-red-500" : ""} />
+              {errors.tanggal && <p className="text-xs text-red-500">{errors.tanggal.message}</p>}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="jam">Jam (Opsional)</Label>
+              <Input type="time" id="jam" {...register("jam")} />
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="nama">Nama Penelepon</Label>
             <Input id="nama" {...register("nama")} className={errors.nama ? "border-red-500" : ""} />

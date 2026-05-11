@@ -25,13 +25,25 @@ export default function SuratDetailModal({ isOpen, onClose, data }: SuratDetailM
 
         <div className="space-y-4 pt-2">
           <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+            <span className="text-sm font-medium text-gray-500">Tanggal</span>
+            <span className="col-span-2 text-sm text-gray-900">
+              {data.tanggal ? format(new Date(data.tanggal), "dd MMMM yyyy", { locale: id }) : "-"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+            <span className="text-sm font-medium text-gray-500">Jam</span>
+            <span className="col-span-2 text-sm text-gray-900">{data.jam || "-"}</span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
             <span className="text-sm font-medium text-gray-500">Jenis Dokumen</span>
             <span className="col-span-2 text-sm text-gray-900 font-semibold">{data.jenisDokumen}</span>
           </div>
           
           <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
             <span className="text-sm font-medium text-gray-500">Kode Dokumen</span>
-            <span className="col-span-2 text-sm text-gray-900">{data.kodeDokumen}</span>
+            <span className="col-span-2 text-sm text-gray-900">{data.kodeDokumen || "-"}</span>
           </div>
 
           <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
