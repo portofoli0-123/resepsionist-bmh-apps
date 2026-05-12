@@ -27,6 +27,11 @@ function getTodayDate() {
   return now.toISOString().split("T")[0]; // YYYY-MM-DD
 }
 
+function getCurrentTime() {
+  const now = new Date();
+  return now.toTimeString().slice(0, 5); // HH:MM
+}
+
 interface GuestFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -51,7 +56,7 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
       keperluan: "",
       institusi: "",
       tanggal: getTodayDate(),
-      jam: "",
+      jam: getCurrentTime(),
     },
   });
 
@@ -64,7 +69,7 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
         keperluan: initialData.keperluan || "",
         institusi: (initialData as any).institusi || "",
         tanggal: (initialData as any).tanggal || getTodayDate(),
-        jam: (initialData as any).jam || "",
+        jam: (initialData as any).jam || getCurrentTime(),
       });
     } else {
       reset({
@@ -74,7 +79,7 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
         keperluan: "",
         institusi: "",
         tanggal: getTodayDate(),
-        jam: "",
+        jam: getCurrentTime(),
       });
     }
   }, [initialData, reset]);

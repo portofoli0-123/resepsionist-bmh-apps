@@ -14,6 +14,11 @@ function getTodayDate() {
   return now.toISOString().split("T")[0]; // YYYY-MM-DD
 }
 
+function getCurrentTime() {
+  const now = new Date();
+  return now.toTimeString().slice(0, 5); // HH:MM
+}
+
 interface SuratFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -39,7 +44,7 @@ export default function SuratForm({ isOpen, onClose, onSubmit, initialData }: Su
       diserahkanKepada: initialData?.diserahkanKepada || "",
       tanggalDiserahkan: initialData?.tanggalDiserahkan || "",
       tanggal: initialData?.tanggal || getTodayDate(),
-      jam: initialData?.jam || "",
+      jam: initialData?.jam || getCurrentTime(),
     },
   });
 

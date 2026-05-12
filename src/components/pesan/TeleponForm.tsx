@@ -14,6 +14,11 @@ function getTodayDate() {
   return now.toISOString().split("T")[0]; // YYYY-MM-DD
 }
 
+function getCurrentTime() {
+  const now = new Date();
+  return now.toTimeString().slice(0, 5); // HH:MM
+}
+
 interface TeleponFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -36,7 +41,7 @@ export default function TeleponForm({ isOpen, onClose, onSubmit, initialData }: 
       keperluan: initialData?.keperluan || "",
       keterangan: initialData?.keterangan || "",
       tanggal: initialData?.tanggal || getTodayDate(),
-      jam: initialData?.jam || "",
+      jam: initialData?.jam || getCurrentTime(),
     },
   });
 
