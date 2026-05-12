@@ -8,6 +8,7 @@ import { db } from "@/lib/firebase";
 import { Guest, guestSchema, CATEGORIES } from "@/lib/schema";
 import GuestTable from "@/components/guest/GuestTable";
 import GuestForm from "@/components/guest/GuestForm";
+import GuestDetail from "@/components/guest/GuestDetail";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -29,7 +30,9 @@ export default function BukuTamuPage() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [month, setMonth] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
+  const [viewingGuest, setViewingGuest] = useState<Guest | null>(null);
 
   useEffect(() => {
     const q = query(collection(db, "guests"), orderBy("createdAt", "desc"));
@@ -223,6 +226,7 @@ export default function BukuTamuPage() {
           loading={loading} 
           onEdit={(g) => { setEditingGuest(g); setIsDialogOpen(true); }}
           onDelete={handleDeleteGuest}
+          onView={(g) => { setViewingGuest(g); setIsDetailOpen(true); }}
         />
       </div>
 
@@ -236,6 +240,12 @@ export default function BukuTamuPage() {
           />
         )}
       </AnimatePresence>
+
+      <GuestDetail 
+        isOpen={isDetailOpen} 
+        onClose={() => setIsDetailOpen(false)} 
+        guest={viewingGuest}
+      />
     </motion.div>
   );
 }

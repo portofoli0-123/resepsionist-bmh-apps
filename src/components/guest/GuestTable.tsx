@@ -3,7 +3,7 @@
 import { Guest } from "@/lib/schema";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, Eye } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   Table,
@@ -20,9 +20,10 @@ interface GuestTableProps {
   loading: boolean;
   onEdit: (guest: Guest) => void;
   onDelete: (id: string) => void;
+  onView: (guest: Guest) => void;
 }
 
-export default function GuestTable({ guests, loading, onEdit, onDelete }: GuestTableProps) {
+export default function GuestTable({ guests, loading, onEdit, onDelete, onView }: GuestTableProps) {
   if (loading) {
     return <div className="py-10 text-center text-gray-500">Memuat data...</div>;
   }
@@ -42,7 +43,6 @@ export default function GuestTable({ guests, loading, onEdit, onDelete }: GuestT
             <TableHead className="font-semibold font-serif">Jam</TableHead>
             <TableHead className="font-semibold font-serif">Kategori</TableHead>
             <TableHead className="font-semibold font-serif">Keperluan</TableHead>
-            <TableHead className="font-semibold font-serif">Institusi</TableHead>
             <TableHead className="font-semibold font-serif">No. WhatsApp</TableHead>
             <TableHead className="text-right font-semibold font-serif">Aksi</TableHead>
           </TableRow>
@@ -69,15 +69,24 @@ export default function GuestTable({ guests, loading, onEdit, onDelete }: GuestT
                 </span>
               </TableCell>
               <TableCell className="text-gray-600 max-w-xs truncate">{guest.keperluan}</TableCell>
-              <TableCell className="text-gray-600">{(guest as any).institusi || "-"}</TableCell>
               <TableCell className="text-gray-600">{(guest as any).whatsapp || "-"}</TableCell>
               <TableCell className="text-right">
-                <div className="flex justify-end gap-2">
+                <div className="flex justify-end gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onView(guest)}
+                    className="text-gray-400 hover:text-blue-600 hover:bg-blue-50"
+                    title="Lihat Detail"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </Button>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => onEdit(guest)}
                     className="text-gray-400 hover:text-emerald-600 hover:bg-emerald-50"
+                    title="Edit Data"
                   >
                     <Edit2 className="w-4 h-4" />
                   </Button>
@@ -86,6 +95,7 @@ export default function GuestTable({ guests, loading, onEdit, onDelete }: GuestT
                     size="icon"
                     onClick={() => onDelete(guest.id)}
                     className="text-gray-400 hover:text-red-600 hover:bg-red-50"
+                    title="Hapus Data"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
