@@ -39,6 +39,7 @@ export default function SuratForm({ isOpen, onClose, onSubmit, initialData }: Su
       jenisDokumen: initialData?.jenisDokumen || "",
       kodeDokumen: initialData?.kodeDokumen || "",
       namaPengirim: initialData?.namaPengirim || "",
+      instansi: initialData?.instansi || "",
       ditujukanKepada: initialData?.ditujukanKepada || "",
       tanggalMasuk: initialData?.tanggalMasuk || "",
       diserahkanKepada: initialData?.diserahkanKepada || "",
@@ -59,7 +60,7 @@ export default function SuratForm({ isOpen, onClose, onSubmit, initialData }: Su
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="text-xl font-serif text-emerald-800">
             {initialData ? "Edit Data Surat" : "Tambah Data Surat"}
@@ -69,7 +70,7 @@ export default function SuratForm({ isOpen, onClose, onSubmit, initialData }: Su
         <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4 pt-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="tanggal">Tanggal</Label>
+              <Label htmlFor="tanggal">Tanggal <span className="text-red-500">*</span></Label>
               <Input type="date" id="tanggal" {...register("tanggal")} className={errors.tanggal ? "border-red-500" : ""} />
               {errors.tanggal && <p className="text-xs text-red-500">{errors.tanggal.message}</p>}
             </div>
@@ -80,7 +81,7 @@ export default function SuratForm({ isOpen, onClose, onSubmit, initialData }: Su
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="jenisDokumen">Jenis Dokumen</Label>
+            <Label htmlFor="jenisDokumen">Jenis Dokumen <span className="text-red-500">*</span></Label>
             <Input id="jenisDokumen" {...register("jenisDokumen")} className={errors.jenisDokumen ? "border-red-500" : ""} />
             {errors.jenisDokumen && <p className="text-xs text-red-500">{errors.jenisDokumen.message}</p>}
           </div>
@@ -91,32 +92,39 @@ export default function SuratForm({ isOpen, onClose, onSubmit, initialData }: Su
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="namaPengirim">Nama Pengirim</Label>
+            <Label htmlFor="namaPengirim">Nama Pengirim <span className="text-red-500">*</span></Label>
             <Input id="namaPengirim" {...register("namaPengirim")} className={errors.namaPengirim ? "border-red-500" : ""} />
             {errors.namaPengirim && <p className="text-xs text-red-500">{errors.namaPengirim.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="ditujukanKepada">Ditujukan Kepada</Label>
+            <Label htmlFor="instansi">Instansi (Opsional)</Label>
+            <Input id="instansi" {...register("instansi")} />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="ditujukanKepada">Ditujukan Kepada <span className="text-red-500">*</span></Label>
             <Input id="ditujukanKepada" {...register("ditujukanKepada")} className={errors.ditujukanKepada ? "border-red-500" : ""} />
             {errors.ditujukanKepada && <p className="text-xs text-red-500">{errors.ditujukanKepada.message}</p>}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="tanggalMasuk">Tanggal Masuk Dokumen</Label>
-            <Input type="date" id="tanggalMasuk" {...register("tanggalMasuk")} className={errors.tanggalMasuk ? "border-red-500" : ""} />
-            {errors.tanggalMasuk && <p className="text-xs text-red-500">{errors.tanggalMasuk.message}</p>}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="tanggalMasuk">Tanggal Masuk Dokumen <span className="text-red-500">*</span></Label>
+              <Input type="date" id="tanggalMasuk" {...register("tanggalMasuk")} className={errors.tanggalMasuk ? "border-red-500" : ""} />
+              {errors.tanggalMasuk && <p className="text-xs text-red-500">{errors.tanggalMasuk.message}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="tanggalDiserahkan">Tanggal Diserahkan (Opsional)</Label>
+              <Input type="date" id="tanggalDiserahkan" {...register("tanggalDiserahkan")} className={errors.tanggalDiserahkan ? "border-red-500" : ""} />
+              {errors.tanggalDiserahkan && <p className="text-xs text-red-500">{errors.tanggalDiserahkan.message}</p>}
+            </div>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="diserahkanKepada">Diserahkan Kepada (Opsional)</Label>
             <Input id="diserahkanKepada" {...register("diserahkanKepada")} />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="tanggalDiserahkan">Tanggal Diserahkan (Opsional)</Label>
-            <Input type="date" id="tanggalDiserahkan" {...register("tanggalDiserahkan")} className={errors.tanggalDiserahkan ? "border-red-500" : ""} />
-            {errors.tanggalDiserahkan && <p className="text-xs text-red-500">{errors.tanggalDiserahkan.message}</p>}
           </div>
 
           <div className="pt-4 flex justify-end gap-3 border-t">

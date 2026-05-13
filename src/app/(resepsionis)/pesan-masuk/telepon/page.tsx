@@ -94,6 +94,7 @@ export default function TeleponPage() {
         t.createdAt ? format(t.createdAt.toDate(), "dd MMM yyyy", { locale: idLocale }) : "-",
       "JAM": t.jam || "-",
       "NAMA": t.nama,
+      "INSTANSI": t.instansi || "-",
       "NO. TELEPON": t.nomorTelepon,
       "KEPERLUAN": t.keperluan,
       "KETERANGAN": t.keterangan || "-",
@@ -109,13 +110,14 @@ export default function TeleponPage() {
     doc.text("Laporan Log Telepon", 14, 15);
     autoTable(doc, {
       startY: 20,
-      head: [['NO', 'TANGGAL', 'JAM', 'NAMA', 'NO. TELEPON', 'KEPERLUAN', 'KETERANGAN']],
+      head: [['NO', 'TANGGAL', 'JAM', 'NAMA', 'INSTANSI', 'NO. TELEPON', 'KEPERLUAN', 'KETERANGAN']],
       body: filteredData.map((t, index) => [
         index + 1,
         t.tanggal ? format(new Date(t.tanggal), "dd MMM yyyy", { locale: idLocale }) : 
           t.createdAt ? format(t.createdAt.toDate(), "dd MMM yyyy", { locale: idLocale }) : "-",
         t.jam || "-",
         t.nama, 
+        t.instansi || "-",
         t.nomorTelepon, 
         t.keperluan,
         t.keterangan || "-", 

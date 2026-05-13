@@ -40,6 +40,7 @@ export default function TeleponTable({ teleponList, loading, onEdit, onDelete }:
               <TableHead className="font-semibold font-serif">Tanggal</TableHead>
               <TableHead className="font-semibold font-serif">Jam</TableHead>
               <TableHead className="font-semibold font-serif">Nama</TableHead>
+              <TableHead className="font-semibold font-serif">Instansi</TableHead>
               <TableHead className="font-semibold font-serif">No. Telepon</TableHead>
               <TableHead className="font-semibold font-serif">Keperluan</TableHead>
               <TableHead className="font-semibold font-serif">Keterangan</TableHead>
@@ -56,6 +57,7 @@ export default function TeleponTable({ teleponList, loading, onEdit, onDelete }:
                 </TableCell>
                 <TableCell className="text-gray-500 text-sm">{t.jam || "-"}</TableCell>
                 <TableCell className="text-gray-900 font-medium">{t.nama}</TableCell>
+                <TableCell className="text-gray-600">{t.instansi || "-"}</TableCell>
                 <TableCell className="text-gray-600">{t.nomorTelepon}</TableCell>
                 <TableCell className="text-gray-600">{t.keperluan}</TableCell>
                 <TableCell className="text-gray-600 max-w-xs truncate">{t.keterangan || "-"}</TableCell>

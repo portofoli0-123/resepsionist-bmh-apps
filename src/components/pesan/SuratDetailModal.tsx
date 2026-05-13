@@ -52,6 +52,11 @@ export default function SuratDetailModal({ isOpen, onClose, data }: SuratDetailM
           </div>
 
           <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+            <span className="text-sm font-medium text-gray-500">Instansi</span>
+            <span className="col-span-2 text-sm text-gray-900">{data.instansi || "-"}</span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
             <span className="text-sm font-medium text-gray-500">Ditujukan Kepada</span>
             <span className="col-span-2 text-sm text-gray-900">{data.ditujukanKepada}</span>
           </div>

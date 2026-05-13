@@ -43,6 +43,7 @@ export default function SuratTable({ suratList, loading, onView, onEdit, onDelet
               <TableHead className="font-semibold font-serif">Jenis Dokumen</TableHead>
               <TableHead className="font-semibold font-serif">Kode Dokumen</TableHead>
               <TableHead className="font-semibold font-serif">Nama Pengirim</TableHead>
+              <TableHead className="font-semibold font-serif">Instansi</TableHead>
               <TableHead className="font-semibold font-serif">Ditujukan Kepada</TableHead>
               <TableHead className="font-semibold font-serif">Tanggal Masuk Dokumen</TableHead>
               <TableHead className="font-semibold font-serif">Diserahkan Kepada</TableHead>
@@ -61,6 +62,7 @@ export default function SuratTable({ suratList, loading, onView, onEdit, onDelet
                 <TableCell className="text-gray-900 font-medium">{s.jenisDokumen}</TableCell>
                 <TableCell className="text-gray-600">{s.kodeDokumen || "-"}</TableCell>
                 <TableCell className="text-gray-600">{s.namaPengirim}</TableCell>
+                <TableCell className="text-gray-600">{s.instansi || "-"}</TableCell>
                 <TableCell className="text-gray-600">{s.ditujukanKepada}</TableCell>
                 <TableCell className="text-gray-500 text-sm">
                   {s.tanggalMasuk ? format(new Date(s.tanggalMasuk), "dd MMM yyyy", { locale: id }) : "-"}

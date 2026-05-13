@@ -37,6 +37,7 @@ export default function TeleponForm({ isOpen, onClose, onSubmit, initialData }: 
     resolver: zodResolver(teleponSchema),
     defaultValues: {
       nama: initialData?.nama || "",
+      instansi: initialData?.instansi || "",
       nomorTelepon: initialData?.nomorTelepon || "",
       keperluan: initialData?.keperluan || "",
       keterangan: initialData?.keterangan || "",
@@ -66,7 +67,7 @@ export default function TeleponForm({ isOpen, onClose, onSubmit, initialData }: 
         <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4 pt-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="tanggal">Tanggal</Label>
+              <Label htmlFor="tanggal">Tanggal <span className="text-red-500">*</span></Label>
               <Input type="date" id="tanggal" {...register("tanggal")} className={errors.tanggal ? "border-red-500" : ""} />
               {errors.tanggal && <p className="text-xs text-red-500">{errors.tanggal.message}</p>}
             </div>
@@ -77,19 +78,24 @@ export default function TeleponForm({ isOpen, onClose, onSubmit, initialData }: 
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="nama">Nama Penelepon</Label>
+            <Label htmlFor="nama">Nama Penelepon <span className="text-red-500">*</span></Label>
             <Input id="nama" {...register("nama")} className={errors.nama ? "border-red-500" : ""} />
             {errors.nama && <p className="text-xs text-red-500">{errors.nama.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="nomorTelepon">No. Telepon</Label>
+            <Label htmlFor="instansi">Instansi (Opsional)</Label>
+            <Input id="instansi" {...register("instansi")} />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="nomorTelepon">No. Telepon <span className="text-red-500">*</span></Label>
             <Input id="nomorTelepon" type="tel" {...register("nomorTelepon")} className={errors.nomorTelepon ? "border-red-500" : ""} />
             {errors.nomorTelepon && <p className="text-xs text-red-500">{errors.nomorTelepon.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="keperluan">Keperluan</Label>
+            <Label htmlFor="keperluan">Keperluan <span className="text-red-500">*</span></Label>
             <Input id="keperluan" {...register("keperluan")} className={errors.keperluan ? "border-red-500" : ""} />
             {errors.keperluan && <p className="text-xs text-red-500">{errors.keperluan.message}</p>}
           </div>

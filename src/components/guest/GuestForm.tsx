@@ -99,7 +99,7 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4 py-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="tanggal">Tanggal</Label>
+              <Label htmlFor="tanggal">Tanggal <span className="text-red-500">*</span></Label>
               <Input
                 type="date"
                 id="tanggal"
@@ -119,7 +119,7 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="nama">Nama Lengkap</Label>
+            <Label htmlFor="nama">Nama Lengkap <span className="text-red-500">*</span></Label>
             <Input
               id="nama"
               placeholder="Masukkan nama pengunjung..."
@@ -141,7 +141,7 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="kategori">Kategori</Label>
+            <Label htmlFor="kategori">Kategori <span className="text-red-500">*</span></Label>
             <Select
               value={currentCategory}
               onValueChange={(value) => setValue("kategori", value as any, { shouldValidate: true })}
