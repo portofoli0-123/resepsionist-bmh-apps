@@ -115,7 +115,7 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const } }
 };
 
 /* ──────────────── Main Component ──────────────── */
@@ -347,7 +347,7 @@ export default function DashboardPage() {
                   <motion.div
                     initial={{ height: 0 }}
                     animate={{ height: `${Math.max((count / maxVal) * 100, 3)}%` }}
-                    transition={{ delay: 0.3 + i * 0.08, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    transition={{ delay: 0.3 + i * 0.08, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const }}
                     className="w-full bg-gradient-to-t from-emerald-400/80 to-emerald-200/60 rounded-t-lg group-hover:from-emerald-500 group-hover:to-emerald-400 transition-colors duration-300 relative"
                   >
                     <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-500 group-hover:text-emerald-600 transition-colors whitespace-nowrap">
