@@ -59,11 +59,10 @@ export default function Sidebar({ onClose }: SidebarProps) {
 
   return (
     <aside 
-      className="w-full bg-background border-r border-border flex flex-col h-screen sticky top-0 overflow-y-auto"
+      className="w-full bg-card border-r border-border flex flex-col h-screen sticky top-0 overflow-y-auto"
     >
-      <div className="p-6 flex items-center justify-between border-b border-border">
+      <div className="h-16 px-4 md:px-8 flex items-center justify-between border-b border-border shrink-0">
         <h1 className="text-xl font-bold text-emerald-600 dark:text-emerald-500 flex items-center gap-2 font-serif">
-          <span className="bg-emerald-600 text-white p-1.5 rounded-lg font-sans text-lg">BMH</span>
           Resepsionis
         </h1>
         <button 

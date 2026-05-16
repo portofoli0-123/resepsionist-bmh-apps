@@ -14,10 +14,7 @@ export default function Navbar({ onMenuClick, isScrolled }: NavbarProps) {
   return (
     <header 
       className={cn(
-        "h-16 flex items-center justify-between px-4 md:px-8 sticky top-0 z-30 transition-all duration-300",
-        isScrolled 
-          ? "bg-background/80 backdrop-blur-md border-b border-border shadow-sm" 
-          : "bg-background border-b border-transparent"
+        "h-16 flex items-center justify-between px-4 md:px-8 bg-card border-b border-border z-30 transition-all duration-300 shrink-0"
       )}
     >
       <div className="flex items-center gap-4">

@@ -340,12 +340,12 @@ export default function DashboardPage() {
   ];
 
   const quickActions = [
-    { label: "Amil Keluar", desc: "Catat amil keluar", icon: UserPlus, onClick: () => setIsAddAmilOpen(true), gradient: "from-purple-500 to-pink-600", hover: "hover:shadow-purple-200" },
-    { label: "Buku Tamu", desc: `${totalGuests} data`, icon: BookOpen, href: "/buku-tamu", gradient: "from-emerald-400 to-emerald-600", hover: "hover:shadow-emerald-200" },
-    { label: "Paket Masuk", desc: `${totalPaket} data`, icon: Package, href: "/pesan-masuk/paket", gradient: "from-rose-400 to-red-600", hover: "hover:shadow-rose-200" },
-    { label: "Amil Keluar", desc: `${totalAmil} data`, icon: Users, href: "/amil-keluar", gradient: "from-purple-400 to-pink-600", hover: "hover:shadow-purple-200" },
-    { label: "Log Telepon", desc: `${totalTelepon} data`, icon: Phone, href: "/pesan-masuk/telepon", gradient: "from-blue-400 to-blue-600", hover: "hover:shadow-blue-200" },
-    { label: "Surat Masuk", desc: `${totalSurat} data`, icon: Mail, href: "/pesan-masuk/surat", gradient: "from-amber-400 to-amber-600", hover: "hover:shadow-amber-200" },
+    { label: "Amil Keluar", desc: "Catat amil keluar", icon: UserPlus, onClick: () => setIsAddAmilOpen(true), gradient: "from-purple-500 to-pink-600" },
+    { label: "Buku Tamu", desc: `${totalGuests} data`, icon: BookOpen, href: "/buku-tamu", gradient: "from-emerald-400 to-emerald-600" },
+    { label: "Paket Masuk", desc: `${totalPaket} data`, icon: Package, href: "/pesan-masuk/paket", gradient: "from-rose-400 to-red-600" },
+    { label: "Amil Keluar", desc: `${totalAmil} data`, icon: Users, href: "/amil-keluar", gradient: "from-purple-400 to-pink-600" },
+    { label: "Log Telepon", desc: `${totalTelepon} data`, icon: Phone, href: "/pesan-masuk/telepon", gradient: "from-blue-400 to-blue-600" },
+    { label: "Surat Masuk", desc: `${totalSurat} data`, icon: Mail, href: "/pesan-masuk/surat", gradient: "from-amber-400 to-amber-600" },
   ];
 
   const recentSections = [
@@ -358,7 +358,7 @@ export default function DashboardPage() {
 
   return (
     <motion.div
-      className="space-y-6 max-w-[1200px] mx-auto"
+      className="space-y-6"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -544,7 +544,7 @@ export default function DashboardPage() {
                 <motion.div
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-xl bg-muted/50 border border-border hover:border-muted-foreground/30 ${action.hover} hover:shadow-md transition-all duration-300 cursor-pointer text-center group`}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-xl bg-muted/50 border border-border hover:border-border hover:bg-accent hover:shadow-md dark:hover:shadow-none transition-all duration-300 cursor-pointer text-center group`}
                 >
                   <div className={`bg-gradient-to-br ${action.gradient} p-2.5 rounded-xl text-white shadow-sm group-hover:shadow-md transition-shadow`}>
                     <action.icon className="w-4 h-4" />
