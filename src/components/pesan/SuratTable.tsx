@@ -32,10 +32,10 @@ export default function SuratTable({ suratList, loading, onView, onEdit, onDelet
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="border border-border rounded-lg overflow-hidden">
       <div className="overflow-x-auto">
         <Table>
-          <TableHeader className="bg-gray-50">
+          <TableHeader className="bg-muted/50">
             <TableRow>
               <TableHead className="font-semibold font-serif w-12 text-center">No</TableHead>
               <TableHead className="font-semibold font-serif">Tanggal</TableHead>
@@ -53,22 +53,22 @@ export default function SuratTable({ suratList, loading, onView, onEdit, onDelet
           </TableHeader>
           <TableBody>
             {suratList.map((s, index) => (
-              <TableRow key={s.id} className="hover:bg-gray-50/50 transition-colors">
-                <TableCell className="text-center text-gray-500 font-medium">{index + 1}</TableCell>
-                <TableCell className="text-gray-500 text-sm">
+              <TableRow key={s.id} className="hover:bg-muted/50 transition-colors">
+                <TableCell className="text-center text-muted-foreground font-medium">{index + 1}</TableCell>
+                <TableCell className="text-muted-foreground text-sm">
                   {s.tanggal ? format(new Date(s.tanggal), "dd MMM yyyy", { locale: id }) : "-"}
                 </TableCell>
-                <TableCell className="text-gray-500 text-sm">{s.jam || "-"}</TableCell>
-                <TableCell className="text-gray-900 font-medium">{s.jenisDokumen}</TableCell>
-                <TableCell className="text-gray-600">{s.kodeDokumen || "-"}</TableCell>
-                <TableCell className="text-gray-600">{s.namaPengirim}</TableCell>
-                <TableCell className="text-gray-600">{s.instansi || "-"}</TableCell>
-                <TableCell className="text-gray-600">{s.ditujukanKepada}</TableCell>
-                <TableCell className="text-gray-500 text-sm">
+                <TableCell className="text-muted-foreground text-sm">{s.jam || "-"}</TableCell>
+                <TableCell className="text-foreground font-medium">{s.jenisDokumen}</TableCell>
+                <TableCell className="text-muted-foreground">{s.kodeDokumen || "-"}</TableCell>
+                <TableCell className="text-muted-foreground">{s.namaPengirim}</TableCell>
+                <TableCell className="text-muted-foreground">{s.instansi || "-"}</TableCell>
+                <TableCell className="text-muted-foreground">{s.ditujukanKepada}</TableCell>
+                <TableCell className="text-muted-foreground text-sm">
                   {s.tanggalMasuk ? format(new Date(s.tanggalMasuk), "dd MMM yyyy", { locale: id }) : "-"}
                 </TableCell>
-                <TableCell className="text-gray-600">{s.diserahkanKepada}</TableCell>
-                <TableCell className="text-gray-500 text-sm">
+                <TableCell className="text-muted-foreground">{s.diserahkanKepada}</TableCell>
+                <TableCell className="text-muted-foreground text-sm">
                   {s.tanggalDiserahkan ? format(new Date(s.tanggalDiserahkan), "dd MMM yyyy", { locale: id }) : "-"}
                 </TableCell>
                 <TableCell className="text-right">
@@ -77,7 +77,7 @@ export default function SuratTable({ suratList, loading, onView, onEdit, onDelet
                       variant="ghost"
                       size="icon"
                       onClick={() => onView(s)}
-                      className="text-gray-400 hover:text-blue-600 hover:bg-blue-50"
+                      className="text-muted-foreground hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30"
                       title="Lihat Detail"
                     >
                       <Eye className="w-4 h-4" />
@@ -86,7 +86,7 @@ export default function SuratTable({ suratList, loading, onView, onEdit, onDelet
                       variant="ghost"
                       size="icon"
                       onClick={() => onEdit(s)}
-                      className="text-gray-400 hover:text-emerald-600 hover:bg-emerald-50"
+                      className="text-muted-foreground hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30"
                     >
                       <Edit2 className="w-4 h-4" />
                     </Button>
@@ -94,7 +94,7 @@ export default function SuratTable({ suratList, loading, onView, onEdit, onDelet
                       variant="ghost"
                       size="icon"
                       onClick={() => onDelete(s.id)}
-                      className="text-gray-400 hover:text-red-600 hover:bg-red-50"
+                      className="text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>

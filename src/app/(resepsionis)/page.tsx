@@ -7,6 +7,15 @@ import {
   Users, Phone, Mail, TrendingUp, Clock, ArrowUpRight,
   UserPlus, BookOpen, PhoneCall, FileText, Activity, Zap, Package
 } from "lucide-react";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
 import {
   collection, query, orderBy, onSnapshot, limit,
   Timestamp, where, addDoc, serverTimestamp
@@ -125,6 +134,11 @@ export default function DashboardPage() {
   const [totalGuests, setTotalGuests] = useState(0);
   const [todayGuests, setTodayGuests] = useState(0);
   const [last7DaysStats, setLast7DaysStats] = useState<number[]>(new Array(7).fill(0));
+  const [last7DaysByCategory, setLast7DaysByCategory] = useState<{
+    donatur: number[];
+    mustahiq: number[];
+    kunjungan: number[];
+  }>({ donatur: new Array(7).fill(0), mustahiq: new Array(7).fill(0), kunjungan: new Array(7).fill(0) });
   const [recentGuests, setRecentGuests] = useState<Guest[]>([]);
 
   const [totalTelepon, setTotalTelepon] = useState(0);
@@ -169,6 +183,22 @@ export default function DashboardPage() {
         return guests.filter(g => g.createdAt && isSameDay(g.createdAt.toDate(), day)).length;
       });
       setLast7DaysStats(stats);
+
+      // Per-category breakdown
+      const donatur = Array.from({ length: 7 }, (_, i) => {
+        const day = subDays(today, 6 - i);
+        return guests.filter(g => g.createdAt && isSameDay(g.createdAt.toDate(), day) && g.kategori === "Donatur").length;
+      });
+      const mustahiq = Array.from({ length: 7 }, (_, i) => {
+        const day = subDays(today, 6 - i);
+        return guests.filter(g => g.createdAt && isSameDay(g.createdAt.toDate(), day) && g.kategori === "Mustahiq").length;
+      });
+      const kunjungan = Array.from({ length: 7 }, (_, i) => {
+        const day = subDays(today, 6 - i);
+        return guests.filter(g => g.createdAt && isSameDay(g.createdAt.toDate(), day) && g.kategori === "Kunjungan & Lainnya").length;
+      });
+      setLast7DaysByCategory({ donatur, mustahiq, kunjungan });
+
       setLoading(false);
     });
 
@@ -277,17 +307,39 @@ export default function DashboardPage() {
   );
   const maxVal = Math.max(...last7DaysStats, 1);
 
+  // Recharts data for the area chart — per category
+  const chartData = Array.from({ length: 7 }, (_, i) => ({
+    day: format(subDays(new Date(), 6 - i), "EEE", { locale: localeId }),
+    date: format(subDays(new Date(), 6 - i), "dd MMM", { locale: localeId }),
+    donatur: last7DaysByCategory.donatur[i],
+    mustahiq: last7DaysByCategory.mustahiq[i],
+    kunjungan: last7DaysByCategory.kunjungan[i],
+  }));
+
+  const chartConfig = {
+    donatur: {
+      label: "Donatur",
+      color: "hsl(217, 91%, 60%)",
+    },
+    mustahiq: {
+      label: "Mustahiq",
+      color: "hsl(30, 80%, 55%)",
+    },
+    kunjungan: {
+      label: "Kunjungan & Lainnya",
+      color: "hsl(160, 60%, 45%)",
+    },
+  } satisfies ChartConfig;
+
   const statCards = [
-    { title: "Total Buku Tamu", total: totalGuests, today: todayGuests, icon: Users, gradient: "from-emerald-500 to-teal-600", light: "bg-emerald-50", text: "text-emerald-700", ring: "#10b981", href: "/buku-tamu" },
-    { title: "Log Telepon", total: totalTelepon, today: todayTelepon, icon: PhoneCall, gradient: "from-blue-500 to-indigo-600", light: "bg-blue-50", text: "text-blue-700", ring: "#3b82f6", href: "/pesan-masuk/telepon" },
-    { title: "Surat Masuk", total: totalSurat, today: todaySurat, icon: FileText, gradient: "from-amber-500 to-orange-600", light: "bg-amber-50", text: "text-amber-700", ring: "#f59e0b", href: "/pesan-masuk/surat" },
-    { title: "Paket Masuk", total: totalPaket, today: todayPaket, icon: Package, gradient: "from-rose-500 to-red-600", light: "bg-rose-50", text: "text-rose-700", ring: "#f43f5e", href: "/pesan-masuk/paket" },
-    { title: "Amil Keluar", total: totalAmil, today: todayAmil, icon: Users, gradient: "from-purple-500 to-pink-600", light: "bg-purple-50", text: "text-purple-700", ring: "#a855f7", href: "/amil-keluar" },
+    { title: "Total Buku Tamu", total: totalGuests, today: todayGuests, icon: Users, gradient: "from-emerald-500 to-teal-600", light: "bg-emerald-50 dark:bg-emerald-900/20", text: "text-emerald-700 dark:text-emerald-400", ring: "#10b981", href: "/buku-tamu" },
+    { title: "Log Telepon", total: totalTelepon, today: todayTelepon, icon: PhoneCall, gradient: "from-blue-500 to-indigo-600", light: "bg-blue-50 dark:bg-blue-900/20", text: "text-blue-700 dark:text-blue-400", ring: "#3b82f6", href: "/pesan-masuk/telepon" },
+    { title: "Surat Masuk", total: totalSurat, today: todaySurat, icon: FileText, gradient: "from-amber-500 to-orange-600", light: "bg-amber-50 dark:bg-amber-900/20", text: "text-amber-700 dark:text-amber-400", ring: "#f59e0b", href: "/pesan-masuk/surat" },
+    { title: "Paket Masuk", total: totalPaket, today: todayPaket, icon: Package, gradient: "from-rose-500 to-red-600", light: "bg-rose-50 dark:bg-rose-900/20", text: "text-rose-700 dark:text-rose-400", ring: "#f43f5e", href: "/pesan-masuk/paket" },
+    { title: "Amil Keluar", total: totalAmil, today: todayAmil, icon: Users, gradient: "from-purple-500 to-pink-600", light: "bg-purple-50 dark:bg-purple-900/20", text: "text-purple-700 dark:text-purple-400", ring: "#a855f7", href: "/amil-keluar" },
   ];
 
   const quickActions = [
-    { label: "Tambah Tamu", desc: "Catat kunjungan baru", icon: UserPlus, onClick: () => setIsAddGuestOpen(true), gradient: "from-emerald-500 to-teal-600", hover: "hover:shadow-emerald-200" },
-    { label: "Paket Masuk", desc: "Catat paket baru", icon: Package, onClick: () => setIsAddPaketOpen(true), gradient: "from-rose-500 to-red-600", hover: "hover:shadow-rose-200" },
     { label: "Amil Keluar", desc: "Catat amil keluar", icon: UserPlus, onClick: () => setIsAddAmilOpen(true), gradient: "from-purple-500 to-pink-600", hover: "hover:shadow-purple-200" },
     { label: "Buku Tamu", desc: `${totalGuests} data`, icon: BookOpen, href: "/buku-tamu", gradient: "from-emerald-400 to-emerald-600", hover: "hover:shadow-emerald-200" },
     { label: "Paket Masuk", desc: `${totalPaket} data`, icon: Package, href: "/pesan-masuk/paket", gradient: "from-rose-400 to-red-600", hover: "hover:shadow-rose-200" },
@@ -297,11 +349,11 @@ export default function DashboardPage() {
   ];
 
   const recentSections = [
-    { title: "Tamu Terbaru", color: "emerald", dot: "bg-emerald-500", link: "/buku-tamu", linkColor: "text-emerald-600", items: recentGuests.map(g => ({ id: g.id!, initial: g.nama?.charAt(0)?.toUpperCase() || "?", name: g.nama || "-", sub: `${g.kategori} · ${g.createdAt ? format(g.createdAt.toDate(), "HH:mm", { locale: localeId }) : "-"}`, bg: "bg-emerald-100", textColor: "text-emerald-700" })) },
-    { title: "Paket Terbaru", color: "rose", dot: "bg-rose-500", link: "/pesan-masuk/paket", linkColor: "text-rose-600", items: recentPaket.map(p => ({ id: p.id!, initial: p.namaPenerima?.charAt(0)?.toUpperCase() || "P", name: p.namaPenerima || "-", sub: `${p.ekspedisi} · ${p.createdAt ? format(p.createdAt.toDate(), "HH:mm", { locale: localeId }) : "-"}`, bg: "bg-rose-100", textColor: "text-rose-700" })) },
-    { title: "Amil Keluar Terbaru", color: "purple", dot: "bg-purple-500", link: "/amil-keluar", linkColor: "text-purple-600", items: recentAmil.map(a => ({ id: a.id!, initial: a.nama?.charAt(0)?.toUpperCase() || "A", name: a.nama || "-", sub: `${a.keperluan} · ${a.createdAt ? format(a.createdAt.toDate(), "HH:mm", { locale: localeId }) : "-"}`, bg: "bg-purple-100", textColor: "text-purple-700" })) },
-    { title: "Telepon Terbaru", color: "blue", dot: "bg-blue-500", link: "/pesan-masuk/telepon", linkColor: "text-blue-600", items: recentTelepon.map(t => ({ id: t.id!, initial: t.nama?.charAt(0)?.toUpperCase() || "T", name: t.nama || "-", sub: `${t.nomorTelepon} · ${t.keperluan}`, bg: "bg-blue-100", textColor: "text-blue-700" })) },
-    { title: "Surat Terbaru", color: "amber", dot: "bg-amber-500", link: "/pesan-masuk/surat", linkColor: "text-amber-600", items: recentSurat.map(s => ({ id: s.id!, initial: s.jenisDokumen?.charAt(0)?.toUpperCase() || "S", name: s.jenisDokumen || "-", sub: `Dari: ${s.namaPengirim} → ${s.ditujukanKepada}`, bg: "bg-amber-100", textColor: "text-amber-700" })) },
+    { title: "Tamu Terbaru", color: "emerald", dot: "bg-emerald-500", link: "/buku-tamu", linkColor: "text-emerald-600 dark:text-emerald-400", items: recentGuests.map(g => ({ id: g.id!, initial: g.nama?.charAt(0)?.toUpperCase() || "?", name: g.nama || "-", sub: `${g.kategori} · ${g.createdAt ? format(g.createdAt.toDate(), "HH:mm", { locale: localeId }) : "-"}`, bg: "bg-emerald-100 dark:bg-emerald-900/30", textColor: "text-emerald-700 dark:text-emerald-400" })) },
+    { title: "Paket Terbaru", color: "rose", dot: "bg-rose-500", link: "/pesan-masuk/paket", linkColor: "text-rose-600 dark:text-rose-400", items: recentPaket.map(p => ({ id: p.id!, initial: p.namaPenerima?.charAt(0)?.toUpperCase() || "P", name: p.namaPenerima || "-", sub: `${p.ekspedisi} · ${p.createdAt ? format(p.createdAt.toDate(), "HH:mm", { locale: localeId }) : "-"}`, bg: "bg-rose-100 dark:bg-rose-900/30", textColor: "text-rose-700 dark:text-rose-400" })) },
+    { title: "Amil Keluar Terbaru", color: "purple", dot: "bg-purple-500", link: "/amil-keluar", linkColor: "text-purple-600 dark:text-purple-400", items: recentAmil.map(a => ({ id: a.id!, initial: a.nama?.charAt(0)?.toUpperCase() || "A", name: a.nama || "-", sub: `${a.keperluan} · ${a.createdAt ? format(a.createdAt.toDate(), "HH:mm", { locale: localeId }) : "-"}`, bg: "bg-purple-100 dark:bg-purple-900/30", textColor: "text-purple-700 dark:text-purple-400" })) },
+    { title: "Telepon Terbaru", color: "blue", dot: "bg-blue-500", link: "/pesan-masuk/telepon", linkColor: "text-blue-600 dark:text-blue-400", items: recentTelepon.map(t => ({ id: t.id!, initial: t.nama?.charAt(0)?.toUpperCase() || "T", name: t.nama || "-", sub: `${t.nomorTelepon} · ${t.keperluan}`, bg: "bg-blue-100 dark:bg-blue-900/30", textColor: "text-blue-700 dark:text-blue-400" })) },
+    { title: "Surat Terbaru", color: "amber", dot: "bg-amber-500", link: "/pesan-masuk/surat", linkColor: "text-amber-600 dark:text-amber-400", items: recentSurat.map(s => ({ id: s.id!, initial: s.jenisDokumen?.charAt(0)?.toUpperCase() || "S", name: s.jenisDokumen || "-", sub: `Dari: ${s.namaPengirim} → ${s.ditujukanKepada}`, bg: "bg-amber-100 dark:bg-amber-900/30", textColor: "text-amber-700 dark:text-amber-400" })) },
   ];
 
   return (
@@ -312,7 +364,7 @@ export default function DashboardPage() {
       animate="visible"
     >
       {/* ── Header ── */}
-      <motion.div variants={itemVariants} className="relative bg-white rounded-2xl p-6 border border-gray-100 shadow-sm overflow-hidden">
+      <motion.div variants={itemVariants} className="relative bg-card rounded-2xl p-6 border border-border shadow-sm overflow-hidden">
         <FloatingCircles />
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -325,10 +377,10 @@ export default function DashboardPage() {
               </motion.div>
               <span className="text-xs font-bold text-emerald-600 uppercase tracking-widest">Dashboard</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 font-serif">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-serif">
               Selamat Datang Kembali!
             </h1>
-            <p className="text-gray-400 text-sm mt-1">
+            <p className="text-muted-foreground text-sm mt-1">
               {format(new Date(), "EEEE, dd MMMM yyyy", { locale: localeId })}
             </p>
           </div>
@@ -351,7 +403,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {statCards.map((s, i) => (
           <motion.div key={s.title} variants={itemVariants}>
-            <Link href={s.href} className="group block relative bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all duration-300 overflow-hidden">
+            <Link href={s.href} className="group block relative bg-card rounded-2xl p-5 border border-border shadow-sm hover:shadow-md hover:border-muted-foreground/30 transition-all duration-300 overflow-hidden">
               {/* Gradient accent line */}
               <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${s.gradient} rounded-t-2xl opacity-60 group-hover:opacity-100 transition-opacity`} />
 
@@ -366,12 +418,12 @@ export default function DashboardPage() {
                   </motion.div>
                   <PulseRing color={s.ring} delay={i * 0.8} />
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-gray-300 group-hover:text-gray-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
+                <ArrowUpRight className="w-4 h-4 text-muted-foreground/50 group-hover:text-foreground group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
               </div>
 
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{s.title}</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{s.title}</p>
               <motion.p
-                className="text-3xl font-bold text-gray-900 mt-1"
+                className="text-3xl font-bold text-foreground mt-1"
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3 + i * 0.1, type: "spring", stiffness: 200 }}
@@ -390,57 +442,99 @@ export default function DashboardPage() {
       {/* ── Chart + Quick Access (Linear Row) ── */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* Chart - 3 cols */}
-        <motion.div variants={itemVariants} className="lg:col-span-3 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-          <div className="flex justify-between items-start mb-4">
+        <motion.div variants={itemVariants} className="lg:col-span-3 bg-card rounded-2xl border border-border shadow-sm flex flex-col overflow-hidden">
+          {/* Header */}
+          <div className="flex justify-between items-center px-6 pt-5 pb-3 border-b border-border">
             <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Tren Tamu 7 Hari</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">
-                {last7DaysStats.reduce((a, b) => a + b, 0)}
-                <span className="text-sm font-normal text-emerald-600 ml-2">Tamu</span>
+              <p className="text-sm font-semibold text-foreground">Statistik Tamu per Kategori</p>
+              <p className="text-muted-foreground text-xs mt-0.5">
+                Total <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{last7DaysStats.reduce((a, b) => a + b, 0)}</span> pengunjung dalam 7 hari terakhir
               </p>
             </div>
             <motion.div
-              className="bg-gradient-to-br from-emerald-500 to-teal-600 p-2.5 rounded-xl text-white"
+              className="bg-gradient-to-br from-emerald-500 to-teal-600 p-2 rounded-lg text-white"
               animate={{ y: [0, -3, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             >
-              <TrendingUp className="w-5 h-5" />
+              <TrendingUp className="w-4 h-4" />
             </motion.div>
           </div>
 
-          {/* Bar Chart */}
-          <div className="flex items-end gap-2 h-40 mt-2">
-            {last7DaysStats.map((count, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1.5 group cursor-pointer">
-                <div className="w-full relative flex flex-col justify-end h-32">
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: `${Math.max((count / maxVal) * 100, 3)}%` }}
-                    transition={{ delay: 0.3 + i * 0.08, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const }}
-                    className="w-full bg-gradient-to-t from-emerald-400/80 to-emerald-200/60 rounded-t-lg group-hover:from-emerald-500 group-hover:to-emerald-400 transition-colors duration-300 relative"
-                  >
-                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-500 group-hover:text-emerald-600 transition-colors whitespace-nowrap">
-                      {count}
-                    </div>
-                  </motion.div>
-                </div>
-                <span className="text-[10px] font-bold text-gray-400 uppercase">{daysLabel[i]}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-between mt-3 text-xs text-gray-400 border-t pt-3">
-            <span>{format(subDays(new Date(), 6), "dd MMM")}</span>
-            <span className="text-emerald-600 font-semibold flex items-center gap-1">
-              <Zap className="w-3 h-3" /> Trend Mingguan
-            </span>
-            <span>{format(new Date(), "dd MMM")}</span>
+          {/* Area Chart — 3 categories */}
+          <div className="px-2 pt-4 pb-2 sm:px-4 flex-grow flex flex-col">
+            <ChartContainer
+              config={chartConfig}
+              className="aspect-auto flex-1 h-full w-full min-h-[220px]"
+            >
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id="fillDonatur" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="var(--color-donatur)" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="var(--color-donatur)" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="fillMustahiq" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="var(--color-mustahiq)" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="var(--color-mustahiq)" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="fillKunjungan" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="var(--color-kunjungan)" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="var(--color-kunjungan)" stopOpacity={0.1} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="day"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={
+                    <ChartTooltipContent
+                      labelFormatter={(value, payload) => {
+                        if (payload && payload.length > 0) {
+                          return (payload[0].payload as any).date;
+                        }
+                        return value;
+                      }}
+                      indicator="dot"
+                    />
+                  }
+                />
+                <Area
+                  dataKey="donatur"
+                  type="natural"
+                  fill="url(#fillDonatur)"
+                  stroke="var(--color-donatur)"
+                  strokeWidth={2}
+                  stackId="a"
+                />
+                <Area
+                  dataKey="mustahiq"
+                  type="natural"
+                  fill="url(#fillMustahiq)"
+                  stroke="var(--color-mustahiq)"
+                  strokeWidth={2}
+                  stackId="a"
+                />
+                <Area
+                  dataKey="kunjungan"
+                  type="natural"
+                  fill="url(#fillKunjungan)"
+                  stroke="var(--color-kunjungan)"
+                  strokeWidth={2}
+                  stackId="a"
+                />
+                <ChartLegend content={<ChartLegendContent />} />
+              </AreaChart>
+            </ChartContainer>
           </div>
         </motion.div>
 
         {/* Quick Access - 2 cols */}
-        <motion.div variants={itemVariants} className="lg:col-span-2 bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <motion.div variants={itemVariants} className="lg:col-span-2 bg-card rounded-2xl p-5 border border-border shadow-sm">
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
             <Zap className="w-3.5 h-3.5 text-emerald-500" />
             Akses Cepat
           </p>
@@ -450,14 +544,14 @@ export default function DashboardPage() {
                 <motion.div
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-xl bg-gray-50 border border-gray-100 hover:border-gray-200 ${action.hover} hover:shadow-md transition-all duration-300 cursor-pointer text-center group`}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-xl bg-muted/50 border border-border hover:border-muted-foreground/30 ${action.hover} hover:shadow-md transition-all duration-300 cursor-pointer text-center group`}
                 >
                   <div className={`bg-gradient-to-br ${action.gradient} p-2.5 rounded-xl text-white shadow-sm group-hover:shadow-md transition-shadow`}>
                     <action.icon className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="font-semibold text-sm text-gray-800">{action.label}</p>
-                    <p className="text-[11px] text-gray-400">{action.desc}</p>
+                    <p className="font-semibold text-sm text-foreground">{action.label}</p>
+                    <p className="text-[11px] text-muted-foreground">{action.desc}</p>
                   </div>
                 </motion.div>
               );
@@ -477,10 +571,10 @@ export default function DashboardPage() {
           <motion.div
             key={section.title}
             variants={itemVariants}
-            className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300"
+            className="bg-card rounded-2xl p-5 border border-border shadow-sm hover:shadow-md transition-shadow duration-300"
           >
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-gray-800 flex items-center gap-2 text-sm">
+              <h3 className="font-bold text-foreground flex items-center gap-2 text-sm">
                 <motion.div
                   className={`w-2 h-2 rounded-full ${section.dot}`}
                   animate={{ scale: [1, 1.3, 1] }}
@@ -494,7 +588,7 @@ export default function DashboardPage() {
             </div>
             <div className="space-y-2.5">
               {section.items.length === 0 && !loading && (
-                <p className="text-sm text-gray-400 text-center py-4">Belum ada data.</p>
+                <p className="text-sm text-muted-foreground text-center py-4">Belum ada data.</p>
               )}
               {section.items.map((item, idx) => (
                 <motion.div
@@ -502,14 +596,14 @@ export default function DashboardPage() {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 + idx * 0.05 }}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors duration-200"
                 >
                   <div className={`w-8 h-8 rounded-full ${item.bg} flex items-center justify-center ${item.textColor} font-bold text-xs flex-shrink-0`}>
                     {item.initial ? item.initial : "•"}
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-gray-800 truncate">{item.name}</p>
-                    <p className="text-xs text-gray-400 truncate">{item.sub}</p>
+                    <p className="text-sm font-semibold text-foreground truncate">{item.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">{item.sub}</p>
                   </div>
                 </motion.div>
               ))}

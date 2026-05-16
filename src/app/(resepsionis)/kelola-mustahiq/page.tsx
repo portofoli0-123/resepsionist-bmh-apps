@@ -131,15 +131,15 @@ export default function KelolaMustahiqPage() {
       className="space-y-6"
     >
       <div>
-        <h1 className="text-3xl font-bold text-emerald-800 font-serif">Kelola Mustahiq</h1>
-        <p className="text-gray-500 font-sans">Catat dan kelola data penyaluran dana mustahiq secara real-time.</p>
+        <h1 className="text-3xl font-bold text-emerald-800 dark:text-emerald-500 font-serif">Kelola Mustahiq</h1>
+        <p className="text-muted-foreground font-sans">Catat dan kelola data penyaluran dana mustahiq secara real-time.</p>
       </div>
 
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
+      <div className="bg-card p-6 rounded-xl shadow-sm border border-border space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center w-full md:w-auto">
             <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Cari nama, NIK, alamat..."
                 className="pl-10"

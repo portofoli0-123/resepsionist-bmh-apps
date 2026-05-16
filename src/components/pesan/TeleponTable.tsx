@@ -31,10 +31,10 @@ export default function TeleponTable({ teleponList, loading, onEdit, onDelete }:
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="border border-border rounded-lg overflow-hidden">
       <div className="overflow-x-auto">
         <Table>
-          <TableHeader className="bg-gray-50">
+          <TableHeader className="bg-muted/50">
             <TableRow>
               <TableHead className="font-semibold font-serif w-12 text-center">No</TableHead>
               <TableHead className="font-semibold font-serif">Tanggal</TableHead>
@@ -49,25 +49,25 @@ export default function TeleponTable({ teleponList, loading, onEdit, onDelete }:
           </TableHeader>
           <TableBody>
             {teleponList.map((t, index) => (
-              <TableRow key={t.id} className="hover:bg-gray-50/50 transition-colors">
-                <TableCell className="text-center text-gray-500 font-medium">{index + 1}</TableCell>
-                <TableCell className="text-gray-500 text-sm">
+              <TableRow key={t.id} className="hover:bg-muted/50 transition-colors">
+                <TableCell className="text-center text-muted-foreground font-medium">{index + 1}</TableCell>
+                <TableCell className="text-muted-foreground text-sm">
                   {t.tanggal ? format(new Date(t.tanggal), "dd MMM yyyy", { locale: id }) : 
                     t.createdAt ? format(t.createdAt.toDate(), "dd MMM yyyy", { locale: id }) : "-"}
                 </TableCell>
-                <TableCell className="text-gray-500 text-sm">{t.jam || "-"}</TableCell>
-                <TableCell className="text-gray-900 font-medium">{t.nama}</TableCell>
-                <TableCell className="text-gray-600">{t.instansi || "-"}</TableCell>
-                <TableCell className="text-gray-600">{t.nomorTelepon}</TableCell>
-                <TableCell className="text-gray-600">{t.keperluan}</TableCell>
-                <TableCell className="text-gray-600 max-w-xs truncate">{t.keterangan || "-"}</TableCell>
+                <TableCell className="text-muted-foreground text-sm">{t.jam || "-"}</TableCell>
+                <TableCell className="text-foreground font-medium">{t.nama}</TableCell>
+                <TableCell className="text-muted-foreground">{t.instansi || "-"}</TableCell>
+                <TableCell className="text-muted-foreground">{t.nomorTelepon}</TableCell>
+                <TableCell className="text-muted-foreground">{t.keperluan}</TableCell>
+                <TableCell className="text-muted-foreground max-w-xs truncate">{t.keterangan || "-"}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => onEdit(t)}
-                      className="text-gray-400 hover:text-emerald-600 hover:bg-emerald-50"
+                      className="text-muted-foreground hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30"
                     >
                       <Edit2 className="w-4 h-4" />
                     </Button>
@@ -75,7 +75,7 @@ export default function TeleponTable({ teleponList, loading, onEdit, onDelete }:
                       variant="ghost"
                       size="icon"
                       onClick={() => onDelete(t.id)}
-                      className="text-gray-400 hover:text-red-600 hover:bg-red-50"
+                      className="text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>

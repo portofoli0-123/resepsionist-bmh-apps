@@ -138,14 +138,14 @@ export default function SuratPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-emerald-800 font-serif">Surat Masuk</h1>
-        <p className="text-gray-500 font-sans">Catat dan kelola data surat masuk.</p>
+        <h1 className="text-3xl font-bold text-emerald-800 dark:text-emerald-500 font-serif">Surat Masuk</h1>
+        <p className="text-muted-foreground font-sans">Catat dan kelola data surat masuk.</p>
       </div>
 
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
+      <div className="bg-card p-6 rounded-xl shadow-sm border border-border space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="relative w-full md:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               placeholder="Cari pengirim, penerima, atau no..."
               className="pl-10"

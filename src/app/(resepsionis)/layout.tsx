@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Sidebar from "@/components/layout/Sidebar";
 import Navbar from "@/components/layout/Navbar";
 import { cn } from "@/lib/utils";
@@ -11,11 +11,32 @@ export default function ResepsionisLayout({
   children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (mainRef.current) {
+        setIsScrolled(mainRef.current.scrollTop > 10);
+      }
+    };
+
+    const mainElement = mainRef.current;
+    if (mainElement) {
+      mainElement.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (mainElement) {
+        mainElement.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
+
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F7F7F7]">
+    <div className="flex h-screen overflow-hidden bg-background">
       {/* Sidebar Overlay for Mobile */}
       {isSidebarOpen && (
         <div
@@ -33,9 +54,12 @@ export default function ResepsionisLayout({
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 h-full">
-        <Navbar onMenuClick={toggleSidebar} />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+      <div className="flex-1 flex flex-col min-w-0 h-full relative">
+        <Navbar onMenuClick={toggleSidebar} isScrolled={isScrolled} />
+        <main 
+          ref={mainRef}
+          className="flex-1 overflow-y-auto p-4 md:p-6"
+        >
           {children}
         </main>
       </div>

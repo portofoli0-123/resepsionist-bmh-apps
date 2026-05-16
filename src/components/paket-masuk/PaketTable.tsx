@@ -31,10 +31,10 @@ export default function PaketTable({ data, loading, onEdit, onDelete }: PaketTab
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="border border-border rounded-lg overflow-hidden">
       <div className="overflow-x-auto">
         <Table>
-          <TableHeader className="bg-gray-50">
+          <TableHeader className="bg-muted/50">
             <TableRow>
               <TableHead className="font-semibold font-serif">Penerima</TableHead>
               <TableHead className="font-semibold font-serif">Ekspedisi</TableHead>
@@ -47,26 +47,26 @@ export default function PaketTable({ data, loading, onEdit, onDelete }: PaketTab
           </TableHeader>
           <TableBody>
             {data.map((item) => (
-              <TableRow key={item.id} className="hover:bg-gray-50/50 transition-colors">
-                <TableCell className="text-gray-900 font-medium">{item.namaPenerima}</TableCell>
-                <TableCell className="text-gray-600">{item.ekspedisi}</TableCell>
-                <TableCell className="text-gray-600">{item.namaPengirim || "-"}</TableCell>
-                <TableCell className="text-gray-500 text-sm font-mono">{item.noResi || "-"}</TableCell>
-                <TableCell className="text-gray-500 text-sm">
+              <TableRow key={item.id} className="hover:bg-muted/50 transition-colors">
+                <TableCell className="text-foreground font-medium">{item.namaPenerima}</TableCell>
+                <TableCell className="text-muted-foreground">{item.ekspedisi}</TableCell>
+                <TableCell className="text-muted-foreground">{item.namaPengirim || "-"}</TableCell>
+                <TableCell className="text-muted-foreground text-sm font-mono">{item.noResi || "-"}</TableCell>
+                <TableCell className="text-muted-foreground text-sm">
                   {item.tanggal
                     ? format(new Date(item.tanggal), "dd MMM yyyy", { locale: id })
                     : item.createdAt
                       ? format(item.createdAt.toDate(), "dd MMM yyyy", { locale: id })
                       : "-"}
                 </TableCell>
-                <TableCell className="text-gray-500 text-sm">{item.jam || "-"}</TableCell>
+                <TableCell className="text-muted-foreground text-sm">{item.jam || "-"}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => onEdit(item)}
-                      className="text-gray-400 hover:text-emerald-600 hover:bg-emerald-50"
+                      className="text-muted-foreground hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30"
                       title="Edit Data"
                     >
                       <Edit2 className="w-4 h-4" />
@@ -75,7 +75,7 @@ export default function PaketTable({ data, loading, onEdit, onDelete }: PaketTab
                       variant="ghost"
                       size="icon"
                       onClick={() => onDelete(item.id)}
-                      className="text-gray-400 hover:text-red-600 hover:bg-red-50"
+                      className="text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30"
                       title="Hapus Data"
                     >
                       <Trash2 className="w-4 h-4" />

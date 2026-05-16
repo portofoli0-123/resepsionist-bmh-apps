@@ -59,18 +59,18 @@ export default function Sidebar({ onClose }: SidebarProps) {
 
   return (
     <aside 
-      className="w-full bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0 overflow-y-auto"
+      className="w-full bg-background border-r border-border flex flex-col h-screen sticky top-0 overflow-y-auto"
     >
-      <div className="p-6 flex items-center justify-between border-b border-gray-50">
-        <h1 className="text-xl font-bold text-emerald-600 flex items-center gap-2 font-serif">
+      <div className="p-6 flex items-center justify-between border-b border-border">
+        <h1 className="text-xl font-bold text-emerald-600 dark:text-emerald-500 flex items-center gap-2 font-serif">
           <span className="bg-emerald-600 text-white p-1.5 rounded-lg font-sans text-lg">BMH</span>
           Resepsionis
         </h1>
         <button 
           onClick={onClose}
-          className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors"
         >
-          <X className="w-5 h-5 text-gray-400" />
+          <X className="w-5 h-5 text-muted-foreground" />
         </button>
       </div>
       
@@ -88,12 +88,12 @@ export default function Sidebar({ onClose }: SidebarProps) {
                   disabled={isDisabled}
                   className={cn(
                     "flex items-center justify-between w-full px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200",
-                    isDisabled ? "opacity-50 cursor-not-allowed" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
-                    isChildActive && !isDisabled ? "bg-emerald-50 text-emerald-700" : ""
+                    isDisabled ? "opacity-50 cursor-not-allowed" : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                    isChildActive && !isDisabled ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400" : ""
                   )}
                 >
                   <div className="flex items-center gap-3">
-                    <item.icon className={cn("w-5 h-5", isChildActive && !isDisabled ? "text-emerald-600" : "text-gray-400")} />
+                    <item.icon className={cn("w-5 h-5", isChildActive && !isDisabled ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground")} />
                     {item.name}
                   </div>
                   {!isDisabled && (isOpen ? <ChevronDown className="w-4 h-4 opacity-50" /> : <ChevronRight className="w-4 h-4 opacity-50" />)}
@@ -109,8 +109,8 @@ export default function Sidebar({ onClose }: SidebarProps) {
                         className={cn(
                           "block px-4 py-2 text-sm rounded-md transition-colors",
                           pathname === child.href
-                            ? "text-emerald-600 font-semibold bg-emerald-50/50"
-                            : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                            ? "text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50/50 dark:bg-emerald-900/20"
+                            : "text-muted-foreground hover:text-foreground hover:bg-accent"
                         )}
                       >
                         {child.name}
@@ -131,21 +131,21 @@ export default function Sidebar({ onClose }: SidebarProps) {
                 "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200",
                 item.disabled ? "opacity-50 cursor-not-allowed" : "",
                 pathname === item.href
-                  ? "bg-emerald-50 text-emerald-700 shadow-sm"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 shadow-sm"
+                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               )}
             >
-              <item.icon className={cn("w-5 h-5", pathname === item.href ? "text-emerald-600" : "text-gray-400")} />
+              <item.icon className={cn("w-5 h-5", pathname === item.href ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground")} />
               {item.name}
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-4 mt-auto border-t border-gray-100">
-        <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100/50">
-          <p className="text-[10px] font-bold text-emerald-800 uppercase tracking-widest">Version 1.0.0</p>
-          <p className="text-xs text-emerald-600/80 mt-1">BMH Apps Guest Management</p>
+      <div className="p-4 mt-auto border-t border-border">
+        <div className="bg-emerald-50/50 dark:bg-emerald-900/20 p-4 rounded-xl border border-emerald-100/50 dark:border-emerald-900/30">
+          <p className="text-[10px] font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-widest">Version 1.0.0</p>
+          <p className="text-xs text-emerald-600/80 dark:text-emerald-500/80 mt-1">BMH Apps Guest Management</p>
         </div>
       </div>
     </aside>
