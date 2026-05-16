@@ -5,20 +5,21 @@ import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import {
   Users, Phone, Mail, TrendingUp, Clock, ArrowUpRight,
-  UserPlus, BookOpen, PhoneCall, FileText, Activity, Zap
+  UserPlus, BookOpen, PhoneCall, FileText, Activity, Zap, Package
 } from "lucide-react";
 import {
   collection, query, orderBy, onSnapshot, limit,
   Timestamp, where, addDoc, serverTimestamp
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Guest } from "@/lib/schema";
-import { Telepon } from "@/lib/schema-pesan";
-import { Surat } from "@/lib/schema-pesan";
+import { Guest, AmilKeluar } from "@/lib/schema";
+import { Telepon, Surat, Paket } from "@/lib/schema-pesan";
 import { format, subDays, startOfDay, isSameDay } from "date-fns";
 import { id as localeId } from "date-fns/locale";
 import Link from "next/link";
 import GuestForm from "@/components/guest/GuestForm";
+import AmilKeluarForm from "@/components/amil-keluar/AmilKeluarForm";
+import PaketForm from "@/components/paket-masuk/PaketForm";
 
 /* ──────────────── Animated SVG Decorations ──────────────── */
 
@@ -134,8 +135,18 @@ export default function DashboardPage() {
   const [todaySurat, setTodaySurat] = useState(0);
   const [recentSurat, setRecentSurat] = useState<Surat[]>([]);
 
+  const [totalAmil, setTotalAmil] = useState(0);
+  const [todayAmil, setTodayAmil] = useState(0);
+  const [recentAmil, setRecentAmil] = useState<AmilKeluar[]>([]);
+
+  const [totalPaket, setTotalPaket] = useState(0);
+  const [todayPaket, setTodayPaket] = useState(0);
+  const [recentPaket, setRecentPaket] = useState<Paket[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [isAddGuestOpen, setIsAddGuestOpen] = useState(false);
+  const [isAddAmilOpen, setIsAddAmilOpen] = useState(false);
+  const [isAddPaketOpen, setIsAddPaketOpen] = useState(false);
 
   useEffect(() => {
     const today = new Date();
@@ -188,6 +199,28 @@ export default function DashboardPage() {
       setRecentSurat(snap.docs.map(d => ({ id: d.id, ...d.data() })) as Surat[]);
     });
 
+    const unsubAmilTotal = onSnapshot(collection(db, "amil-keluar"), (snap) => {
+      const all = snap.docs.map(d => ({ id: d.id, ...d.data() })) as AmilKeluar[];
+      setTotalAmil(snap.size);
+      setTodayAmil(all.filter(a => a.createdAt && isSameDay(a.createdAt.toDate(), today)).length);
+    });
+
+    const qRecentAmil = query(collection(db, "amil-keluar"), orderBy("createdAt", "desc"), limit(3));
+    const unsubAmilRecent = onSnapshot(qRecentAmil, (snap) => {
+      setRecentAmil(snap.docs.map(d => ({ id: d.id, ...d.data() })) as AmilKeluar[]);
+    });
+
+    const unsubPaketTotal = onSnapshot(collection(db, "paket-masuk"), (snap) => {
+      const all = snap.docs.map(d => ({ id: d.id, ...d.data() })) as Paket[];
+      setTotalPaket(snap.size);
+      setTodayPaket(all.filter(p => p.createdAt && isSameDay(p.createdAt.toDate(), today)).length);
+    });
+
+    const qRecentPaket = query(collection(db, "paket-masuk"), orderBy("createdAt", "desc"), limit(3));
+    const unsubPaketRecent = onSnapshot(qRecentPaket, (snap) => {
+      setRecentPaket(snap.docs.map(d => ({ id: d.id, ...d.data() })) as Paket[]);
+    });
+
     return () => {
       unsubscribeTotal();
       unsubscribeStats();
@@ -196,6 +229,10 @@ export default function DashboardPage() {
       unsubTeleponRecent();
       unsubSuratTotal();
       unsubSuratRecent();
+      unsubAmilTotal();
+      unsubAmilRecent();
+      unsubPaketTotal();
+      unsubPaketRecent();
     };
   }, []);
 
@@ -211,6 +248,30 @@ export default function DashboardPage() {
     }
   };
 
+  const handleAddAmil = async (data: any) => {
+    try {
+      await addDoc(collection(db, "amil-keluar"), {
+        ...data,
+        createdAt: serverTimestamp(),
+      });
+      setIsAddAmilOpen(false);
+    } catch (error) {
+      console.error("Error saving amil keluar:", error);
+    }
+  };
+
+  const handleAddPaket = async (data: any) => {
+    try {
+      await addDoc(collection(db, "paket-masuk"), {
+        ...data,
+        createdAt: serverTimestamp(),
+      });
+      setIsAddPaketOpen(false);
+    } catch (error) {
+      console.error("Error saving paket masuk:", error);
+    }
+  };
+
   const daysLabel = Array.from({ length: 7 }, (_, i) =>
     format(subDays(new Date(), 6 - i), "EEE", { locale: localeId })
   );
@@ -220,17 +281,25 @@ export default function DashboardPage() {
     { title: "Total Buku Tamu", total: totalGuests, today: todayGuests, icon: Users, gradient: "from-emerald-500 to-teal-600", light: "bg-emerald-50", text: "text-emerald-700", ring: "#10b981", href: "/buku-tamu" },
     { title: "Log Telepon", total: totalTelepon, today: todayTelepon, icon: PhoneCall, gradient: "from-blue-500 to-indigo-600", light: "bg-blue-50", text: "text-blue-700", ring: "#3b82f6", href: "/pesan-masuk/telepon" },
     { title: "Surat Masuk", total: totalSurat, today: todaySurat, icon: FileText, gradient: "from-amber-500 to-orange-600", light: "bg-amber-50", text: "text-amber-700", ring: "#f59e0b", href: "/pesan-masuk/surat" },
+    { title: "Paket Masuk", total: totalPaket, today: todayPaket, icon: Package, gradient: "from-rose-500 to-red-600", light: "bg-rose-50", text: "text-rose-700", ring: "#f43f5e", href: "/pesan-masuk/paket" },
+    { title: "Amil Keluar", total: totalAmil, today: todayAmil, icon: Users, gradient: "from-purple-500 to-pink-600", light: "bg-purple-50", text: "text-purple-700", ring: "#a855f7", href: "/amil-keluar" },
   ];
 
   const quickActions = [
     { label: "Tambah Tamu", desc: "Catat kunjungan baru", icon: UserPlus, onClick: () => setIsAddGuestOpen(true), gradient: "from-emerald-500 to-teal-600", hover: "hover:shadow-emerald-200" },
+    { label: "Paket Masuk", desc: "Catat paket baru", icon: Package, onClick: () => setIsAddPaketOpen(true), gradient: "from-rose-500 to-red-600", hover: "hover:shadow-rose-200" },
+    { label: "Amil Keluar", desc: "Catat amil keluar", icon: UserPlus, onClick: () => setIsAddAmilOpen(true), gradient: "from-purple-500 to-pink-600", hover: "hover:shadow-purple-200" },
     { label: "Buku Tamu", desc: `${totalGuests} data`, icon: BookOpen, href: "/buku-tamu", gradient: "from-emerald-400 to-emerald-600", hover: "hover:shadow-emerald-200" },
+    { label: "Paket Masuk", desc: `${totalPaket} data`, icon: Package, href: "/pesan-masuk/paket", gradient: "from-rose-400 to-red-600", hover: "hover:shadow-rose-200" },
+    { label: "Amil Keluar", desc: `${totalAmil} data`, icon: Users, href: "/amil-keluar", gradient: "from-purple-400 to-pink-600", hover: "hover:shadow-purple-200" },
     { label: "Log Telepon", desc: `${totalTelepon} data`, icon: Phone, href: "/pesan-masuk/telepon", gradient: "from-blue-400 to-blue-600", hover: "hover:shadow-blue-200" },
     { label: "Surat Masuk", desc: `${totalSurat} data`, icon: Mail, href: "/pesan-masuk/surat", gradient: "from-amber-400 to-amber-600", hover: "hover:shadow-amber-200" },
   ];
 
   const recentSections = [
     { title: "Tamu Terbaru", color: "emerald", dot: "bg-emerald-500", link: "/buku-tamu", linkColor: "text-emerald-600", items: recentGuests.map(g => ({ id: g.id!, initial: g.nama?.charAt(0)?.toUpperCase() || "?", name: g.nama || "-", sub: `${g.kategori} · ${g.createdAt ? format(g.createdAt.toDate(), "HH:mm", { locale: localeId }) : "-"}`, bg: "bg-emerald-100", textColor: "text-emerald-700" })) },
+    { title: "Paket Terbaru", color: "rose", dot: "bg-rose-500", link: "/pesan-masuk/paket", linkColor: "text-rose-600", items: recentPaket.map(p => ({ id: p.id!, initial: p.namaPenerima?.charAt(0)?.toUpperCase() || "P", name: p.namaPenerima || "-", sub: `${p.ekspedisi} · ${p.createdAt ? format(p.createdAt.toDate(), "HH:mm", { locale: localeId }) : "-"}`, bg: "bg-rose-100", textColor: "text-rose-700" })) },
+    { title: "Amil Keluar Terbaru", color: "purple", dot: "bg-purple-500", link: "/amil-keluar", linkColor: "text-purple-600", items: recentAmil.map(a => ({ id: a.id!, initial: a.nama?.charAt(0)?.toUpperCase() || "A", name: a.nama || "-", sub: `${a.keperluan} · ${a.createdAt ? format(a.createdAt.toDate(), "HH:mm", { locale: localeId }) : "-"}`, bg: "bg-purple-100", textColor: "text-purple-700" })) },
     { title: "Telepon Terbaru", color: "blue", dot: "bg-blue-500", link: "/pesan-masuk/telepon", linkColor: "text-blue-600", items: recentTelepon.map(t => ({ id: t.id!, initial: t.nama?.charAt(0)?.toUpperCase() || "T", name: t.nama || "-", sub: `${t.nomorTelepon} · ${t.keperluan}`, bg: "bg-blue-100", textColor: "text-blue-700" })) },
     { title: "Surat Terbaru", color: "amber", dot: "bg-amber-500", link: "/pesan-masuk/surat", linkColor: "text-amber-600", items: recentSurat.map(s => ({ id: s.id!, initial: s.jenisDokumen?.charAt(0)?.toUpperCase() || "S", name: s.jenisDokumen || "-", sub: `Dari: ${s.namaPengirim} → ${s.ditujukanKepada}`, bg: "bg-amber-100", textColor: "text-amber-700" })) },
   ];
@@ -279,7 +348,7 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* ── Stat Cards Grid ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {statCards.map((s, i) => (
           <motion.div key={s.title} variants={itemVariants}>
             <Link href={s.href} className="group block relative bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all duration-300 overflow-hidden">
@@ -402,8 +471,8 @@ export default function DashboardPage() {
         </motion.div>
       </div>
 
-      {/* ── Recent Activity (Linear 3-col grid) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      {/* ── Recent Activity (Linear Row Grid) ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         {recentSections.map((section, si) => (
           <motion.div
             key={section.title}
@@ -456,6 +525,22 @@ export default function DashboardPage() {
             isOpen={isAddGuestOpen}
             onClose={() => setIsAddGuestOpen(false)}
             onSubmit={handleAddGuest}
+            initialData={null}
+          />
+        )}
+        {isAddAmilOpen && (
+          <AmilKeluarForm
+            isOpen={isAddAmilOpen}
+            onClose={() => setIsAddAmilOpen(false)}
+            onSubmit={handleAddAmil}
+            initialData={null}
+          />
+        )}
+        {isAddPaketOpen && (
+          <PaketForm
+            isOpen={isAddPaketOpen}
+            onClose={() => setIsAddPaketOpen(false)}
+            onSubmit={handleAddPaket}
             initialData={null}
           />
         )}

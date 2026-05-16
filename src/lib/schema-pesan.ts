@@ -39,3 +39,21 @@ export interface Surat extends SuratInput {
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }
+
+export const paketSchema = z.object({
+  namaPenerima: z.string().min(2, "Nama penerima harus diisi"),
+  ekspedisi: z.string().min(2, "Nama ekspedisi harus diisi"),
+  namaPengirim: z.string().optional(),
+  noResi: z.string().optional(),
+  keterangan: z.string().optional(),
+  tanggal: z.string().min(1, "Tanggal harus diisi"),
+  jam: z.string().optional(),
+});
+
+export type PaketInput = z.infer<typeof paketSchema>;
+
+export interface Paket extends PaketInput {
+  id: string;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+}

@@ -27,23 +27,23 @@ export default function Sidebar({ onClose }: SidebarProps) {
       icon: BookOpen,
     },
     {
+      name: "Amil Keluar",
+      href: "/amil-keluar",
+      icon: Users,
+    },
+    {
       name: "Pesan Masuk",
       icon: Mail,
       children: [
         { name: "Telepon", href: "/pesan-masuk/telepon" },
         { name: "Surat", href: "/pesan-masuk/surat" },
+        { name: "Paket", href: "/pesan-masuk/paket" },
       ]
     },
     {
-      name: "Kelola Tamu",
+      name: "Kelola Mustahiq",
+      href: "/kelola-mustahiq",
       icon: Users,
-      disabled: true,
-      children: [
-        { name: "Kelola Donatur", href: "/kelola-tamu/donatur" },
-        { name: "Mustahiq", href: "/kelola-tamu/mustahiq" },
-        { name: "Kunjungan", href: "/kelola-tamu/kunjungan" },
-        { name: "Lainnya", href: "/kelola-tamu/lainnya" },
-      ]
     },
     {
       name: "Setting",
