@@ -1,0 +1,89 @@
+================================================================================
+DOKUMENTASI APLIKASI GUEST MANAGEMENT - RESEPSIONIS BMH APPS
+================================================================================
+
+Aplikasi **Dashboard Resepsionis BMH** adalah sistem manajemen tamu dan operasional frontliner real-time yang dirancang khusus untuk mempermudah pencatatan, verifikasi, dan pelaporan aktivitas harian di kantor pelayanan BMH.
+
+Dokumen ini berfungsi sebagai panduan operasional bagi petugas resepsionis (frontliner) baru serta menjelaskan logika kerja sistem untuk tim teknis.
+
+--------------------------------------------------------------------------------
+1. PANDUAN PENGGUNAAN FITUR UTAMA
+--------------------------------------------------------------------------------
+
+Aplikasi ini memiliki enam menu utama di Sidebar kiri:
+
+A. Dashboard
+   - Menyediakan ringkasan eksekutif secara real-time mengenai aktivitas hari ini.
+   - Menampilkan total pengunjung hari ini, staf amil yang sedang keluar, jumlah pesan masuk (telepon/surat/paket), dan total transaksi bantuan mustahiq.
+   - Dilengkapi grafik statistik mingguan/bulanan untuk memantau tren operasional.
+
+B. Buku Tamu (Guest Book)
+   - Digunakan untuk mencatat semua tamu yang datang ke kantor BMH.
+   - Kolom Input: Nama Tamu, Kategori (Donatur, Mustahiq, Lainnya), Keperluan, Tanggal, Jam, dan Keterangan Tambahan.
+   - Fitur Pendukung: Pencarian tamu berdasarkan nama/keperluan, filter rentang tanggal, serta ekspor data ke format Excel dan PDF untuk pelaporan periodik.
+
+C. Amil Keluar
+   - Digunakan untuk mencatat data staf amil yang keluar kantor demi kepentingan dinas maupun keperluan pribadi.
+   - Kolom Input: Nama Amil, Keperluan (Dinas/Pribadi), Tanggal, Jam Keluar, dan Estimasi Jam Kembali.
+   - Fitur Pendukung: Ekspor ke Excel dan PDF, pencarian amil, serta filter tanggal.
+
+D. Pesan Masuk (Submenu)
+   - Telepon: Mencatat panggilan telepon masuk beserta nomor penelepon, instansi, keperluan, dan tindak lanjut yang diperlukan.
+   - Surat: Mencatat dokumen/surat fisik yang masuk, kode dokumen, pengirim, instansi, penerima tujuan, tanggal masuk, status penyerahan, dan tanggal diserahkan.
+   - Paket: Mencatat paket barang/logistik masuk, nama penerima, jasa ekspedisi/kurir, nama pengirim, nomor resi (No. Resi), tanggal, dan waktu masuk.
+
+E. Kelola Mustahiq
+   - Digunakan untuk mencatat penyaluran dana bantuan tunai langsung kepada mustahiq.
+   - Kolom Input: Nama Mustahiq, Nomor Induk Kependudukan (NIK), Alamat Lengkap, Nominal Bantuan (Rp), Tanggal, dan Jam Penyerahan.
+   - **Logika Validasi NIK Cooldown 30 Hari**: Sistem dilengkapi fitur keamanan anti-double-assist. Ketika petugas menyimpan transaksi, sistem otomatis memeriksa histori transaksi NIK tersebut. Jika NIK tersebut telah menerima bantuan dalam kurun waktu kurang dari 30 hari, penyimpanan akan digagalkan dan menampilkan pesan kesalahan transparan.
+   - **Pengaturan Halaman (Rows per Page)**: Tersedia dropdown di pojok kiri bawah tabel dengan opsi: 10 (default), 25, 50, 100, dan "All" (menampilkan seluruh data mustahiq secara dinamis tanpa pagination).
+
+F. Pengaturan (Submenu)
+   - Pengaturan Umum: Mengatur konfigurasi dasar sistem dan informasi lembaga.
+   - Dokumentasi Website: Berisi petunjuk teknis penggunaan website.
+   - Lainnya: Fitur-fitur opsional pendukung lainnya.
+
+--------------------------------------------------------------------------------
+2. SOP RESEPSIONIS (FRONTLINER)
+--------------------------------------------------------------------------------
+
+Petugas Frontliner wajib menjalankan Standard Operating Procedure (SOP) berikut demi ketertiban administrasi dan pemerataan penyaluran dana bantuan:
+
+Step 1: Sambut Tamu dengan Ramah
+   - Sapa tamu yang datang dengan senyum dan salam hangat. Tanyakan keperluan kunjungan mereka dengan sopan.
+
+Step 2: Identifikasi Kategori Tamu
+   - Tamu Umum/Donatur: Catat langsung identitas mereka di menu "Buku Tamu".
+   - Staf Amil: Jika ada staf yang ingin meninggalkan kantor, ingatkan untuk mengisi data di menu "Amil Keluar".
+   - Mustahiq (Pemohon Bantuan): Ikuti verifikasi ketat di bawah ini.
+
+Step 3: Protokol Verifikasi Mustahiq (NIK & Identitas)
+   - Minta Dokumen Resmi: Sambut dengan ramah dan langsung minta KTP/KK asli tamu untuk mencocokkan NIK (Nomor Induk Kependudukan) yang tertera.
+   - Pengecekan Sistem: Input NIK di kolom pencarian sistem (pada menu Kelola Mustahiq) sebelum menyetujui atau mencairkan bantuan.
+   - Pengambilan Keputusan:
+     - JIKA MEMENUHI SYARAT (Lolos pengecekan 30 hari): Lanjutkan pengisian formulir input penerima uang di menu Kelola Mustahiq dan lakukan serah terima dana bantuan secara profesional.
+     - JIKA BARU MENERIMA BANTUAN (< 30 Hari): Tolak permohonan dengan halus dan sopan. Berikan edukasi yang jelas bahwa dana bantuan digilir secara berkala agar merata kepada mustahiq lainnya sesuai kebijakan resmi lembaga (misalnya, batas 1 kali bantuan per 30 hari).
+
+--------------------------------------------------------------------------------
+3. LOGIKA BERJALANNYA SISTEM WEB
+--------------------------------------------------------------------------------
+
+- **Konsep Cooldown (Jeda Waktu)**: Sistem tidak memblokir NIK mustahiq secara permanen, melainkan menerapkan sistem cooldown atau jeda waktu 30 hari terhitung sejak tanggal pencairan bantuan terakhir mereka.
+- **Notifikasi Validasi Real-time**: Ketika petugas mencoba menginput NIK yang masih berada dalam masa jeda 30 hari, sistem akan memblokir proses submit dan menampilkan alert peringatan transparan, contoh:
+  "Gagal: Mustahiq dengan NIK ini sudah menerima bantuan pada 24 Mei 2026."
+- **Pencegahan Pencairan Ganda**: Mekanisme penolakan langsung di tingkat input ini sepenuhnya mencegah pencairan ganda (double distribution) pada periode waktu yang berdekatan.
+
+--------------------------------------------------------------------------------
+4. LOGIKA PADA DATABASE (FIRESTORE)
+--------------------------------------------------------------------------------
+
+- **Tabel Transaksi/Riwayat (Histori)**: NIK mustahiq masih bisa dan harus bisa diinput berkali-kali ke dalam database Firestore. Kolom NIK sengaja tidak diset "Unique" di level database karena berfungsi sebagai rekam jejak (histori) pencairan bulanan yang berbeda. Ini memungkinkan lembaga melihat rekap histori bantuan mustahiq dari bulan ke bulan.
+- **Validasi Tingkat Backend (API/Controller)**: Pencegahan data ganda tidak dilakukan di skema database, melainkan diatur pada logika aplikasi (frontend/backend). Saat tombol "Simpan Data" ditekan:
+  1. Sistem melakukan query ke Firestore untuk mencari transaksi mustahiq dengan NIK yang dimasukkan.
+  2. Sistem mengambil transaksi paling baru (paling update berdasarkan timestamp).
+  3. Sistem menghitung selisih hari antara tanggal hari ini dengan tanggal transaksi terakhir tersebut.
+  4. Jika selisih hari < 30 hari, proses penyimpanan dibatalkan secara aman dan memunculkan error dialog untuk user. Jika sudah >= 30 hari, transaksi baru berhasil disimpan dan dimasukkan ke dalam riwayat.
+
+================================================================================
+DOKUMENTASI INI DIBUAT UNTUK MENJAMIN AKURASI OPERASIONAL DAN TRANSPARANSI DATA.
+================================================================================

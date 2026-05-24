@@ -11,11 +11,18 @@ interface SidebarProps {
   onClose?: () => void;
 }
 
+interface MenuItem {
+  name: string;
+  href?: string;
+  icon: any;
+  disabled?: boolean;
+  children?: { name: string; href: string }[];
+}
+
 export default function Sidebar({ onClose }: SidebarProps) {
   const pathname = usePathname();
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
       name: "Dashboard",
       href: "/",
@@ -32,6 +39,11 @@ export default function Sidebar({ onClose }: SidebarProps) {
       icon: Users,
     },
     {
+      name: "Kelola Mustahiq",
+      href: "/kelola-mustahiq",
+      icon: Users,
+    },
+    {
       name: "Pesan Masuk",
       icon: Mail,
       children: [
@@ -41,45 +53,50 @@ export default function Sidebar({ onClose }: SidebarProps) {
       ]
     },
     {
-      name: "Kelola Mustahiq",
-      href: "/kelola-mustahiq",
-      icon: Users,
-    },
-    {
-      name: "Setting",
-      href: "#",
+      name: "Pengaturan",
       icon: Settings,
-      disabled: true
+      children: [
+        { name: "Umum", href: "/pengaturan/umum" },
+        { name: "Dokumentasi", href: "/pengaturan/dokumentasi" },
+        { name: "Lainnya", href: "/pengaturan/lainnya" },
+      ]
     }
   ];
+
+  const [openDropdown, setOpenDropdown] = useState<string | null>(() => {
+    const activeItem = menuItems.find(
+      item => item.children && item.children.some(child => pathname.startsWith(child.href))
+    );
+    return activeItem ? activeItem.name : null;
+  });
 
   const toggleDropdown = (name: string) => {
     setOpenDropdown(openDropdown === name ? null : name);
   };
 
   return (
-    <aside 
+    <aside
       className="w-full bg-card border-r border-border flex flex-col h-screen sticky top-0 overflow-y-auto"
     >
       <div className="h-16 px-4 md:px-8 flex items-center justify-between border-b border-border shrink-0">
         <h1 className="text-xl font-bold text-emerald-600 dark:text-emerald-500 flex items-center gap-2 font-serif">
           Resepsionis
         </h1>
-        <button 
+        <button
           onClick={onClose}
           className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors"
         >
           <X className="w-5 h-5 text-muted-foreground" />
         </button>
       </div>
-      
+
       <nav className="flex-1 px-4 py-6 space-y-2">
         {menuItems.map((item) => {
           if (item.children) {
             const isOpen = openDropdown === item.name;
             const isChildActive = item.children.some(child => pathname.startsWith(child.href));
             const isDisabled = (item as any).disabled;
-            
+
             return (
               <div key={item.name} className="space-y-1">
                 <button
@@ -97,7 +114,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
                   </div>
                   {!isDisabled && (isOpen ? <ChevronDown className="w-4 h-4 opacity-50" /> : <ChevronRight className="w-4 h-4 opacity-50" />)}
                 </button>
-                
+
                 {isOpen && !isDisabled && (
                   <div className="pl-11 space-y-1">
                     {item.children.map((child) => (
