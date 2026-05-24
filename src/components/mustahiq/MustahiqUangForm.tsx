@@ -67,7 +67,7 @@ export default function MustahiqUangForm({ isOpen, onClose, onSubmit, initialDat
     defaultValues: {
       nama: "",
       nik: "",
-      alamat: "",
+      jenisPenyaluran: "",
       nominal: 0,
       tanggal: getTodayDate(),
       jam: getCurrentTime(),
@@ -79,7 +79,7 @@ export default function MustahiqUangForm({ isOpen, onClose, onSubmit, initialDat
       reset({
         nama: initialData.nama,
         nik: initialData.nik,
-        alamat: initialData.alamat,
+        jenisPenyaluran: (initialData as any).jenisPenyaluran || (initialData as any).alamat || "-",
         nominal: initialData.nominal,
         tanggal: initialData.tanggal || getTodayDate(),
         jam: initialData.jam || getCurrentTime(),
@@ -88,7 +88,7 @@ export default function MustahiqUangForm({ isOpen, onClose, onSubmit, initialDat
       reset({
         nama: "",
         nik: "",
-        alamat: "",
+        jenisPenyaluran: "",
         nominal: 0,
         tanggal: getTodayDate(),
         jam: getCurrentTime(),
@@ -185,88 +185,88 @@ export default function MustahiqUangForm({ isOpen, onClose, onSubmit, initialDat
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="max-w-[550px] w-[95vw] h-[85vh] max-h-[600px] p-0 flex flex-col overflow-hidden gap-0 rounded-2xl">
+        <DialogHeader className="px-6 py-4 border-b border-border shrink-0 bg-muted/20">
           <DialogTitle className="font-serif text-xl">{initialData ? "Edit Data Mustahiq" : "Input Penerima Uang"}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4 py-4">
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col flex-1 overflow-hidden">
+          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="tanggal">Tanggal <span className="text-red-500">*</span></Label>
+                <Input
+                  type="date"
+                  id="tanggal"
+                  {...register("tanggal")}
+                  className={errors.tanggal ? "border-red-500" : ""}
+                  disabled={isBusy}
+                />
+                {errors.tanggal && <p className="text-xs text-red-500">{errors.tanggal.message as string}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="jam">Jam</Label>
+                <Input
+                  type="time"
+                  id="jam"
+                  {...register("jam")}
+                  disabled={isBusy}
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
-              <Label htmlFor="tanggal">Tanggal <span className="text-red-500">*</span></Label>
+              <Label htmlFor="nama">Nama Mustahiq <span className="text-red-500">*</span></Label>
               <Input
-                type="date"
-                id="tanggal"
-                {...register("tanggal")}
-                className={errors.tanggal ? "border-red-500" : ""}
+                id="nama"
+                placeholder="Masukkan nama mustahiq..."
+                {...register("nama")}
+                className={errors.nama ? "border-red-500" : ""}
                 disabled={isBusy}
               />
-              {errors.tanggal && <p className="text-xs text-red-500">{errors.tanggal.message as string}</p>}
+              {errors.nama && <p className="text-xs text-red-500">{errors.nama.message as string}</p>}
             </div>
+
             <div className="space-y-2">
-              <Label htmlFor="jam">Jam</Label>
+              <Label htmlFor="nik">NIK <span className="text-red-500">*</span></Label>
               <Input
-                type="time"
-                id="jam"
-                {...register("jam")}
+                id="nik"
+                placeholder="16 digit NIK..."
+                {...register("nik")}
+                className={errors.nik ? "border-red-500" : ""}
+                disabled={isBusy}
+              />
+              {errors.nik && <p className="text-xs text-red-500">{errors.nik.message as string}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="jenisPenyaluran">Jenis Penyaluran</Label>
+              <Input
+                id="jenisPenyaluran"
+                placeholder="Contoh: Bantuan Sembako, Uang Tunai, dll..."
+                {...register("jenisPenyaluran")}
                 disabled={isBusy}
               />
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="nominal">Nominal (Rp) <span className="text-red-500">*</span></Label>
+              <Input
+                id="nominal"
+                type="number"
+                placeholder="Contoh: 100000"
+                {...register("nominal")}
+                className={errors.nominal ? "border-red-500" : ""}
+                disabled={isBusy}
+              />
+              {errors.nominal && <p className="text-xs text-red-500">{errors.nominal.message as string}</p>}
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="nama">Nama Mustahiq <span className="text-red-500">*</span></Label>
-            <Input
-              id="nama"
-              placeholder="Masukkan nama mustahiq..."
-              {...register("nama")}
-              className={errors.nama ? "border-red-500" : ""}
-              disabled={isBusy}
-            />
-            {errors.nama && <p className="text-xs text-red-500">{errors.nama.message as string}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="nik">NIK <span className="text-red-500">*</span></Label>
-            <Input
-              id="nik"
-              placeholder="16 digit NIK..."
-              {...register("nik")}
-              className={errors.nik ? "border-red-500" : ""}
-              disabled={isBusy}
-            />
-            {errors.nik && <p className="text-xs text-red-500">{errors.nik.message as string}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="alamat">Alamat <span className="text-red-500">*</span></Label>
-            <Textarea
-              id="alamat"
-              placeholder="Masukkan alamat lengkap..."
-              {...register("alamat")}
-              className={errors.alamat ? "border-red-500" : ""}
-              disabled={isBusy}
-            />
-            {errors.alamat && <p className="text-xs text-red-500">{errors.alamat.message as string}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="nominal">Nominal (Rp) <span className="text-red-500">*</span></Label>
-            <Input
-              id="nominal"
-              type="number"
-              placeholder="Contoh: 100000"
-              {...register("nominal")}
-              className={errors.nominal ? "border-red-500" : ""}
-              disabled={isBusy}
-            />
-            {errors.nominal && <p className="text-xs text-red-500">{errors.nominal.message as string}</p>}
-          </div>
-
-          <DialogFooter className="pt-4">
-            <Button type="button" variant="outline" onClick={onClose} disabled={isBusy}>
+          <DialogFooter className="px-6 py-4 border-t border-border shrink-0 bg-muted/20 flex flex-row justify-end gap-2">
+            <Button type="button" variant="outline" onClick={onClose} disabled={isBusy} className="rounded-lg h-10 text-xs font-medium">
               Batal
             </Button>
-            <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white" disabled={isBusy}>
+            <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg h-10 text-xs font-medium" disabled={isBusy}>
               {isBusy ? "Memverifikasi..." : initialData ? "Simpan Perubahan" : "Simpan Data"}
             </Button>
           </DialogFooter>

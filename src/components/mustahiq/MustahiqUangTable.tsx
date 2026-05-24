@@ -108,7 +108,7 @@ export default function MustahiqUangTable({ data, loading, onEdit, onDelete }: M
               <TableRow>
                 <TableHead className="font-semibold font-serif">Nama</TableHead>
                 <TableHead className="font-semibold font-serif">NIK</TableHead>
-                <TableHead className="font-semibold font-serif">Alamat</TableHead>
+                <TableHead className="font-semibold font-serif">Jenis Penyaluran</TableHead>
                 <TableHead className="font-semibold font-serif">Nominal</TableHead>
                 <TableHead className="font-semibold font-serif">Tanggal</TableHead>
                 <TableHead className="font-semibold font-serif">Jam</TableHead>
@@ -120,7 +120,7 @@ export default function MustahiqUangTable({ data, loading, onEdit, onDelete }: M
                 <TableRow key={item.id} className="hover:bg-muted/50 transition-colors">
                   <TableCell className="text-foreground font-medium">{item.nama}</TableCell>
                   <TableCell className="text-muted-foreground text-sm font-mono">{item.nik}</TableCell>
-                  <TableCell className="text-muted-foreground max-w-xs truncate">{item.alamat}</TableCell>
+                  <TableCell className="text-muted-foreground max-w-xs truncate">{(item as any).jenisPenyaluran || item.alamat || "-"}</TableCell>
                   <TableCell className="text-emerald-700 dark:text-emerald-400 font-bold">{formatCurrency(item.nominal)}</TableCell>
                   <TableCell className="text-muted-foreground text-sm">
                     {item.tanggal

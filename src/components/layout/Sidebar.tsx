@@ -34,13 +34,13 @@ export default function Sidebar({ onClose }: SidebarProps) {
       icon: BookOpen,
     },
     {
-      name: "Amil Keluar",
-      href: "/amil-keluar",
+      name: "Kelola Mustahiq",
+      href: "/kelola-mustahiq",
       icon: Users,
     },
     {
-      name: "Kelola Mustahiq",
-      href: "/kelola-mustahiq",
+      name: "Amil Keluar",
+      href: "/amil-keluar",
       icon: Users,
     },
     {

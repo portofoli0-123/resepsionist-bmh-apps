@@ -77,77 +77,79 @@ export default function PaketForm({ isOpen, onClose, onSubmit, initialData }: Pa
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="max-w-[550px] w-[95vw] h-[85vh] max-h-[600px] p-0 flex flex-col overflow-hidden gap-0 rounded-2xl">
+        <DialogHeader className="px-6 py-4 border-b border-border shrink-0 bg-muted/20">
           <DialogTitle className="font-serif text-xl">{initialData ? "Edit Data Paket" : "Tambah Paket Masuk"}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="tanggal">Tanggal <span className="text-red-500">*</span></Label>
-              <Input
-                type="date"
-                id="tanggal"
-                {...register("tanggal")}
-                className={errors.tanggal ? "border-red-500" : ""}
-              />
-              {errors.tanggal && <p className="text-xs text-red-500">{errors.tanggal.message as string}</p>}
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
+          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="tanggal">Tanggal <span className="text-red-500">*</span></Label>
+                <Input
+                  type="date"
+                  id="tanggal"
+                  {...register("tanggal")}
+                  className={errors.tanggal ? "border-red-500" : ""}
+                />
+                {errors.tanggal && <p className="text-xs text-red-500">{errors.tanggal.message as string}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="jam">Jam</Label>
+                <Input
+                  type="time"
+                  id="jam"
+                  {...register("jam")}
+                />
+              </div>
             </div>
+
             <div className="space-y-2">
-              <Label htmlFor="jam">Jam</Label>
+              <Label htmlFor="namaPenerima">Nama Penerima <span className="text-red-500">*</span></Label>
               <Input
-                type="time"
-                id="jam"
-                {...register("jam")}
+                id="namaPenerima"
+                placeholder="Masukkan nama penerima..."
+                {...register("namaPenerima")}
+                className={errors.namaPenerima ? "border-red-500" : ""}
+              />
+              {errors.namaPenerima && <p className="text-xs text-red-500">{errors.namaPenerima.message as string}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="ekspedisi">Kurir / Ekspedisi <span className="text-red-500">*</span></Label>
+              <Input
+                id="ekspedisi"
+                placeholder="Contoh: JNE, J&T, Sicepat, dll..."
+                {...register("ekspedisi")}
+                className={errors.ekspedisi ? "border-red-500" : ""}
+              />
+              {errors.ekspedisi && <p className="text-xs text-red-500">{errors.ekspedisi.message as string}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="namaPengirim">Nama Pengirim (Opsional)</Label>
+              <Input
+                id="namaPengirim"
+                placeholder="Masukkan nama pengirim..."
+                {...register("namaPengirim")}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="noResi">No. Resi (Opsional)</Label>
+              <Input
+                id="noResi"
+                placeholder="Masukkan nomor resi..."
+                {...register("noResi")}
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="namaPenerima">Nama Penerima <span className="text-red-500">*</span></Label>
-            <Input
-              id="namaPenerima"
-              placeholder="Masukkan nama penerima..."
-              {...register("namaPenerima")}
-              className={errors.namaPenerima ? "border-red-500" : ""}
-            />
-            {errors.namaPenerima && <p className="text-xs text-red-500">{errors.namaPenerima.message as string}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="ekspedisi">Kurir / Ekspedisi <span className="text-red-500">*</span></Label>
-            <Input
-              id="ekspedisi"
-              placeholder="Contoh: JNE, J&T, Sicepat, dll..."
-              {...register("ekspedisi")}
-              className={errors.ekspedisi ? "border-red-500" : ""}
-            />
-            {errors.ekspedisi && <p className="text-xs text-red-500">{errors.ekspedisi.message as string}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="namaPengirim">Nama Pengirim (Opsional)</Label>
-            <Input
-              id="namaPengirim"
-              placeholder="Masukkan nama pengirim..."
-              {...register("namaPengirim")}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="noResi">No. Resi (Opsional)</Label>
-            <Input
-              id="noResi"
-              placeholder="Masukkan nomor resi..."
-              {...register("noResi")}
-            />
-          </div>
-
-          <DialogFooter className="pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
+          <DialogFooter className="px-6 py-4 border-t border-border shrink-0 bg-muted/20 flex flex-row justify-end gap-2">
+            <Button type="button" variant="outline" onClick={onClose} className="rounded-lg h-10 text-xs font-medium">
               Batal
             </Button>
-            <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white" disabled={isSubmitting}>
+            <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg h-10 text-xs font-medium" disabled={isSubmitting}>
               {isSubmitting ? "Menyimpan..." : initialData ? "Simpan Perubahan" : "Simpan Data"}
             </Button>
           </DialogFooter>

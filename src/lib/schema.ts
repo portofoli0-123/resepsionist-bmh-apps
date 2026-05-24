@@ -29,7 +29,8 @@ export type AmilKeluar = z.infer<typeof amilKeluarSchema> & { id: string; create
 export const mustahiqUangSchema = z.object({
   nama: z.string().min(3, "Nama minimal 3 karakter"),
   nik: z.string().min(16, "NIK harus 16 digit").max(16, "NIK harus 16 digit"),
-  alamat: z.string().min(5, "Alamat minimal 5 karakter"),
+  jenisPenyaluran: z.string().optional(),
+  alamat: z.string().optional(),
   nominal: z.preprocess((val) => Number(val), z.number().min(0, "Nominal tidak boleh negatif")),
   tanggal: z.string().min(1, "Tanggal harus diisi"),
   jam: z.string().optional(),

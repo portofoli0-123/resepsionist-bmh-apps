@@ -92,101 +92,103 @@ export default function GuestForm({ isOpen, onClose, onSubmit, initialData }: Gu
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="max-w-[550px] w-[95vw] h-[85vh] max-h-[600px] p-0 flex flex-col overflow-hidden gap-0 rounded-2xl">
+        <DialogHeader className="px-6 py-4 border-b border-border shrink-0 bg-muted/20">
           <DialogTitle className="font-serif text-xl">{initialData ? "Edit Data Tamu" : "Tambah Tamu Baru"}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4 py-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="tanggal">Tanggal <span className="text-red-500">*</span></Label>
-              <Input
-                type="date"
-                id="tanggal"
-                {...register("tanggal")}
-                className={errors.tanggal ? "border-red-500" : ""}
-              />
-              {errors.tanggal && <p className="text-xs text-red-500">{errors.tanggal.message as string}</p>}
+        <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col flex-1 overflow-hidden">
+          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="tanggal">Tanggal <span className="text-red-500">*</span></Label>
+                <Input
+                  type="date"
+                  id="tanggal"
+                  {...register("tanggal")}
+                  className={errors.tanggal ? "border-red-500" : ""}
+                />
+                {errors.tanggal && <p className="text-xs text-red-500">{errors.tanggal.message as string}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="jam">Jam (Opsional)</Label>
+                <Input
+                  type="time"
+                  id="jam"
+                  {...register("jam")}
+                />
+              </div>
             </div>
+
             <div className="space-y-2">
-              <Label htmlFor="jam">Jam (Opsional)</Label>
+              <Label htmlFor="nama">Nama Lengkap <span className="text-red-500">*</span></Label>
               <Input
-                type="time"
-                id="jam"
-                {...register("jam")}
+                id="nama"
+                placeholder="Masukkan nama pengunjung..."
+                {...register("nama")}
+                className={errors.nama ? "border-red-500" : ""}
               />
+              {errors.nama && <p className="text-xs text-red-500">{errors.nama.message as string}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="whatsapp">No. WhatsApp (Opsional)</Label>
+              <Input
+                id="whatsapp"
+                placeholder="Contoh: 08123456789"
+                {...register("whatsapp")}
+                className={errors.whatsapp ? "border-red-500" : ""}
+              />
+              {errors.whatsapp && <p className="text-xs text-red-500">{errors.whatsapp.message as string}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="kategori">Kategori <span className="text-red-500">*</span></Label>
+              <Select
+                value={currentCategory}
+                onValueChange={(value) => setValue("kategori", value as any, { shouldValidate: true })}
+              >
+                <SelectTrigger className={errors.kategori ? "border-red-500" : ""}>
+                  <SelectValue placeholder="Pilih kategori..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {CATEGORIES.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.kategori && <p className="text-xs text-red-500">{errors.kategori.message as string}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="keperluan">Keperluan (Opsional)</Label>
+              <Input
+                id="keperluan"
+                placeholder="Contoh: Silaturahmi, Donasi, dll..."
+                {...register("keperluan")}
+                className={errors.keperluan ? "border-red-500" : ""}
+              />
+              {errors.keperluan && <p className="text-xs text-red-500">{errors.keperluan.message as string}</p>}
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="institusi">Institusi / Lembaga (Opsional)</Label>
+              <Input
+                id="institusi"
+                placeholder="Contoh: PT. Maju Jaya, Sekolah ABC, dll..."
+                {...register("institusi")}
+                className={errors.institusi ? "border-red-500" : ""}
+              />
+              {errors.institusi && <p className="text-xs text-red-500">{errors.institusi.message as string}</p>}
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="nama">Nama Lengkap <span className="text-red-500">*</span></Label>
-            <Input
-              id="nama"
-              placeholder="Masukkan nama pengunjung..."
-              {...register("nama")}
-              className={errors.nama ? "border-red-500" : ""}
-            />
-            {errors.nama && <p className="text-xs text-red-500">{errors.nama.message as string}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="whatsapp">No. WhatsApp (Opsional)</Label>
-            <Input
-              id="whatsapp"
-              placeholder="Contoh: 08123456789"
-              {...register("whatsapp")}
-              className={errors.whatsapp ? "border-red-500" : ""}
-            />
-            {errors.whatsapp && <p className="text-xs text-red-500">{errors.whatsapp.message as string}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="kategori">Kategori <span className="text-red-500">*</span></Label>
-            <Select
-              value={currentCategory}
-              onValueChange={(value) => setValue("kategori", value as any, { shouldValidate: true })}
-            >
-              <SelectTrigger className={errors.kategori ? "border-red-500" : ""}>
-                <SelectValue placeholder="Pilih kategori..." />
-              </SelectTrigger>
-              <SelectContent>
-                {CATEGORIES.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
-                    {cat}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.kategori && <p className="text-xs text-red-500">{errors.kategori.message as string}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="keperluan">Keperluan (Opsional)</Label>
-            <Input
-              id="keperluan"
-              placeholder="Contoh: Silaturahmi, Donasi, dll..."
-              {...register("keperluan")}
-              className={errors.keperluan ? "border-red-500" : ""}
-            />
-            {errors.keperluan && <p className="text-xs text-red-500">{errors.keperluan.message as string}</p>}
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="institusi">Institusi / Lembaga (Opsional)</Label>
-            <Input
-              id="institusi"
-              placeholder="Contoh: PT. Maju Jaya, Sekolah ABC, dll..."
-              {...register("institusi")}
-              className={errors.institusi ? "border-red-500" : ""}
-            />
-            {errors.institusi && <p className="text-xs text-red-500">{errors.institusi.message as string}</p>}
-          </div>
-
-          <DialogFooter className="pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
+          <DialogFooter className="px-6 py-4 border-t border-border shrink-0 bg-muted/20 flex flex-row justify-end gap-2">
+            <Button type="button" variant="outline" onClick={onClose} className="rounded-lg h-10 text-xs font-medium">
               Batal
             </Button>
-            <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white" disabled={isSubmitting}>
+            <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg h-10 text-xs font-medium" disabled={isSubmitting}>
               {isSubmitting ? "Menyimpan..." : initialData ? "Simpan Perubahan" : "Simpan Data"}
             </Button>
           </DialogFooter>

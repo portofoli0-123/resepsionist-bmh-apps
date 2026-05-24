@@ -176,7 +176,7 @@ export default function DokumentasiPage() {
                     <div className="space-y-1.5 flex-1">
                       <h3 className="font-bold text-base text-foreground">E. Kelola Mustahiq</h3>
                       <p className="text-xs text-muted-foreground leading-relaxed mb-3">
-                        Mengelola pemberian bantuan langsung tunai kepada mustahiq. Menampung data NIK, nominal bantuan, alamat, dan tanggal pencairan.
+                        Mengelola pemberian bantuan langsung tunai kepada mustahiq. Menampung data NIK, nominal bantuan, jenis penyaluran, dan tanggal pencairan.
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="bg-background p-3 rounded-lg border border-border text-xs">
@@ -298,7 +298,7 @@ export default function DokumentasiPage() {
   id: "mustahiq_doc_12345",
   nama: "Adam",
   nik: "3273240897550001",
-  alamat: "Jl. Soekarno Hatta No. 45, Bandung",
+  jenisPenyaluran: "Sembako & Uang Tunai",
   nominal: 500000,
   tanggal: "2026-05-24", // format tanggal
   jam: "14:30",

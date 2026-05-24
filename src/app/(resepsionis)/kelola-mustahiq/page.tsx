@@ -61,7 +61,7 @@ export default function KelolaMustahiqPage() {
     const matchesSearch = 
       item.nama.toLowerCase().includes(search.toLowerCase()) || 
       item.nik.toLowerCase().includes(search.toLowerCase()) ||
-      item.alamat.toLowerCase().includes(search.toLowerCase());
+      (item.jenisPenyaluran || item.alamat || "").toLowerCase().includes(search.toLowerCase());
     
     let matchesDate = true;
     if (date && item.createdAt) {
@@ -131,7 +131,7 @@ export default function KelolaMustahiqPage() {
     const exportData = filteredData.map(item => ({
       Nama: item.nama,
       NIK: item.nik,
-      Alamat: item.alamat,
+      "Jenis Penyaluran": (item as any).jenisPenyaluran || item.alamat || "-",
       Nominal: item.nominal,
       Tanggal: item.tanggal ? format(new Date(item.tanggal), "dd MMM yyyy", { locale: id }) :
         item.createdAt ? format(item.createdAt.toDate(), "dd MMM yyyy", { locale: id }) : "-",
@@ -148,11 +148,11 @@ export default function KelolaMustahiqPage() {
     doc.text("Laporan Penerimaan Uang Mustahiq", 14, 15);
     autoTable(doc, {
       startY: 20,
-      head: [['Nama', 'NIK', 'Alamat', 'Nominal', 'Tanggal', 'Jam']],
+      head: [['Nama', 'NIK', 'Jenis Penyaluran', 'Nominal', 'Tanggal', 'Jam']],
       body: filteredData.map(item => [
         item.nama,
         item.nik,
-        item.alamat,
+        (item as any).jenisPenyaluran || item.alamat || "-",
         new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(item.nominal),
         item.tanggal ? format(new Date(item.tanggal), "dd MMM yyyy", { locale: id }) :
           item.createdAt ? format(item.createdAt.toDate(), "dd MMM yyyy", { locale: id }) : "-",
@@ -180,7 +180,7 @@ export default function KelolaMustahiqPage() {
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder="Cari nama, NIK, alamat..."
+                placeholder="Cari nama, NIK, jenis penyaluran..."
                 className="pl-10"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
