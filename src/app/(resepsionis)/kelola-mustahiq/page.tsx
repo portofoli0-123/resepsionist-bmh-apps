@@ -7,6 +7,7 @@ import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateD
 import { db } from "@/lib/firebase";
 import { MustahiqUang } from "@/lib/schema";
 import MustahiqUangTable from "@/components/mustahiq/MustahiqUangTable";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import MustahiqUangForm from "@/components/mustahiq/MustahiqUangForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +28,20 @@ export default function KelolaMustahiqPage() {
   const [month, setMonth] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<MustahiqUang | null>(null);
+  const [confirmState, setConfirmState] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    onConfirm: () => void;
+    confirmText?: string;
+    cancelText?: string;
+    variant?: "destructive" | "default" | "success";
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+    onConfirm: () => {},
+  });
 
   useEffect(() => {
     const q = query(collection(db, "mustahiq-uang"), orderBy("createdAt", "desc"));
@@ -62,7 +77,7 @@ export default function KelolaMustahiqPage() {
     return matchesSearch && matchesDate && matchesMonth;
   });
 
-  const handleSubmit = async (formData: any) => {
+  const executeSave = async (formData: any) => {
     try {
       if (editingItem) {
         await updateDoc(doc(db, "mustahiq-uang", editingItem.id), {
@@ -82,10 +97,34 @@ export default function KelolaMustahiqPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-      await deleteDoc(doc(db, "mustahiq-uang", id));
+  const handleSubmit = async (formData: any) => {
+    if (editingItem) {
+      setConfirmState({
+        isOpen: true,
+        title: "Simpan Perubahan?",
+        description: "Apakah Anda yakin ingin menyimpan perubahan pada data mustahiq ini?",
+        confirmText: "Simpan",
+        cancelText: "Batal",
+        variant: "success",
+        onConfirm: () => executeSave(formData),
+      });
+    } else {
+      await executeSave(formData);
     }
+  };
+
+  const handleDelete = async (id: string) => {
+    setConfirmState({
+      isOpen: true,
+      title: "Hapus Data Mustahiq",
+      description: "Apakah Anda yakin ingin menghapus data ini secara permanen? Tindakan ini tidak dapat dibatalkan.",
+      confirmText: "Hapus",
+      cancelText: "Batal",
+      variant: "destructive",
+      onConfirm: async () => {
+        await deleteDoc(doc(db, "mustahiq-uang", id));
+      },
+    });
   };
 
   const handleExportExcel = () => {
@@ -206,6 +245,17 @@ export default function KelolaMustahiqPage() {
           />
         )}
       </AnimatePresence>
+
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        onClose={() => setConfirmState((prev) => ({ ...prev, isOpen: false }))}
+        title={confirmState.title}
+        description={confirmState.description}
+        onConfirm={confirmState.onConfirm}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        variant={confirmState.variant}
+      />
     </motion.div>
   );
 }

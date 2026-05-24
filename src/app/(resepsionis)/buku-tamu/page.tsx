@@ -7,6 +7,7 @@ import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateD
 import { db } from "@/lib/firebase";
 import { Guest, guestSchema, CATEGORIES } from "@/lib/schema";
 import GuestTable from "@/components/guest/GuestTable";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import GuestForm from "@/components/guest/GuestForm";
 import GuestDetail from "@/components/guest/GuestDetail";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,20 @@ export default function BukuTamuPage() {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
   const [viewingGuest, setViewingGuest] = useState<Guest | null>(null);
+  const [confirmState, setConfirmState] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    onConfirm: () => void;
+    confirmText?: string;
+    cancelText?: string;
+    variant?: "destructive" | "default" | "success";
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+    onConfirm: () => {},
+  });
 
   useEffect(() => {
     const q = query(collection(db, "guests"), orderBy("createdAt", "desc"));
@@ -69,7 +84,7 @@ export default function BukuTamuPage() {
     return matchesSearch && matchesCategory && matchesDate && matchesMonth;
   });
 
-  const handleAddGuest = async (data: any) => {
+  const executeSave = async (data: any) => {
     try {
       if (editingGuest) {
         await updateDoc(doc(db, "guests", editingGuest.id), {
@@ -89,10 +104,34 @@ export default function BukuTamuPage() {
     }
   };
 
-  const handleDeleteGuest = async (id: string) => {
-    if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-      await deleteDoc(doc(db, "guests", id));
+  const handleAddGuest = async (data: any) => {
+    if (editingGuest) {
+      setConfirmState({
+        isOpen: true,
+        title: "Simpan Perubahan?",
+        description: "Apakah Anda yakin ingin menyimpan perubahan pada data tamu ini?",
+        confirmText: "Simpan",
+        cancelText: "Batal",
+        variant: "success",
+        onConfirm: () => executeSave(data),
+      });
+    } else {
+      await executeSave(data);
     }
+  };
+
+  const handleDeleteGuest = async (id: string) => {
+    setConfirmState({
+      isOpen: true,
+      title: "Hapus Data Tamu",
+      description: "Apakah Anda yakin ingin menghapus data ini secara permanen? Tindakan ini tidak dapat dibatalkan.",
+      confirmText: "Hapus",
+      cancelText: "Batal",
+      variant: "destructive",
+      onConfirm: async () => {
+        await deleteDoc(doc(db, "guests", id));
+      },
+    });
   };
 
   const handleExportExcel = () => {
@@ -245,6 +284,17 @@ export default function BukuTamuPage() {
         isOpen={isDetailOpen} 
         onClose={() => setIsDetailOpen(false)} 
         guest={viewingGuest}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        onClose={() => setConfirmState((prev) => ({ ...prev, isOpen: false }))}
+        title={confirmState.title}
+        description={confirmState.description}
+        onConfirm={confirmState.onConfirm}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        variant={confirmState.variant}
       />
     </motion.div>
   );

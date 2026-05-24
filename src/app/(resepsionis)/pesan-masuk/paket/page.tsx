@@ -7,6 +7,7 @@ import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateD
 import { db } from "@/lib/firebase";
 import { Paket } from "@/lib/schema-pesan";
 import PaketTable from "@/components/paket-masuk/PaketTable";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import PaketForm from "@/components/paket-masuk/PaketForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +28,20 @@ export default function PaketMasukPage() {
   const [month, setMonth] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Paket | null>(null);
+  const [confirmState, setConfirmState] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    onConfirm: () => void;
+    confirmText?: string;
+    cancelText?: string;
+    variant?: "destructive" | "default" | "success";
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+    onConfirm: () => {},
+  });
 
   useEffect(() => {
     const q = query(collection(db, "paket-masuk"), orderBy("createdAt", "desc"));
@@ -63,7 +78,7 @@ export default function PaketMasukPage() {
     return matchesSearch && matchesDate && matchesMonth;
   });
 
-  const handleSubmit = async (formData: any) => {
+  const executeSave = async (formData: any) => {
     try {
       if (editingItem) {
         await updateDoc(doc(db, "paket-masuk", editingItem.id), {
@@ -83,10 +98,34 @@ export default function PaketMasukPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-      await deleteDoc(doc(db, "paket-masuk", id));
+  const handleSubmit = async (formData: any) => {
+    if (editingItem) {
+      setConfirmState({
+        isOpen: true,
+        title: "Simpan Perubahan?",
+        description: "Apakah Anda yakin ingin menyimpan perubahan pada data paket masuk ini?",
+        confirmText: "Simpan",
+        cancelText: "Batal",
+        variant: "success",
+        onConfirm: () => executeSave(formData),
+      });
+    } else {
+      await executeSave(formData);
     }
+  };
+
+  const handleDelete = async (id: string) => {
+    setConfirmState({
+      isOpen: true,
+      title: "Hapus Data Paket Masuk",
+      description: "Apakah Anda yakin ingin menghapus data ini secara permanen? Tindakan ini tidak dapat dibatalkan.",
+      confirmText: "Hapus",
+      cancelText: "Batal",
+      variant: "destructive",
+      onConfirm: async () => {
+        await deleteDoc(doc(db, "paket-masuk", id));
+      },
+    });
   };
 
   const handleExportExcel = () => {
@@ -207,6 +246,17 @@ export default function PaketMasukPage() {
           />
         )}
       </AnimatePresence>
+
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        onClose={() => setConfirmState((prev) => ({ ...prev, isOpen: false }))}
+        title={confirmState.title}
+        description={confirmState.description}
+        onConfirm={confirmState.onConfirm}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        variant={confirmState.variant}
+      />
     </motion.div>
   );
 }

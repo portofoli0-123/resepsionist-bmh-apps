@@ -7,6 +7,7 @@ import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateD
 import { db } from "@/lib/firebase";
 import { AmilKeluar } from "@/lib/schema";
 import AmilKeluarTable from "@/components/amil-keluar/AmilKeluarTable";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import AmilKeluarForm from "@/components/amil-keluar/AmilKeluarForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +28,20 @@ export default function AmilKeluarPage() {
   const [month, setMonth] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<AmilKeluar | null>(null);
+  const [confirmState, setConfirmState] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    onConfirm: () => void;
+    confirmText?: string;
+    cancelText?: string;
+    variant?: "destructive" | "default" | "success";
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+    onConfirm: () => {},
+  });
 
   useEffect(() => {
     const q = query(collection(db, "amil-keluar"), orderBy("createdAt", "desc"));
@@ -61,7 +76,7 @@ export default function AmilKeluarPage() {
     return matchesSearch && matchesDate && matchesMonth;
   });
 
-  const handleSubmit = async (formData: any) => {
+  const executeSave = async (formData: any) => {
     try {
       if (editingItem) {
         await updateDoc(doc(db, "amil-keluar", editingItem.id), {
@@ -81,10 +96,34 @@ export default function AmilKeluarPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-      await deleteDoc(doc(db, "amil-keluar", id));
+  const handleSubmit = async (formData: any) => {
+    if (editingItem) {
+      setConfirmState({
+        isOpen: true,
+        title: "Simpan Perubahan?",
+        description: "Apakah Anda yakin ingin menyimpan perubahan pada data amil keluar ini?",
+        confirmText: "Simpan",
+        cancelText: "Batal",
+        variant: "success",
+        onConfirm: () => executeSave(formData),
+      });
+    } else {
+      await executeSave(formData);
     }
+  };
+
+  const handleDelete = async (id: string) => {
+    setConfirmState({
+      isOpen: true,
+      title: "Hapus Data Amil Keluar",
+      description: "Apakah Anda yakin ingin menghapus data ini secara permanen? Tindakan ini tidak dapat dibatalkan.",
+      confirmText: "Hapus",
+      cancelText: "Batal",
+      variant: "destructive",
+      onConfirm: async () => {
+        await deleteDoc(doc(db, "amil-keluar", id));
+      },
+    });
   };
 
   const handleExportExcel = () => {
@@ -201,6 +240,17 @@ export default function AmilKeluarPage() {
           />
         )}
       </AnimatePresence>
+
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        onClose={() => setConfirmState((prev) => ({ ...prev, isOpen: false }))}
+        title={confirmState.title}
+        description={confirmState.description}
+        onConfirm={confirmState.onConfirm}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        variant={confirmState.variant}
+      />
     </motion.div>
   );
 }

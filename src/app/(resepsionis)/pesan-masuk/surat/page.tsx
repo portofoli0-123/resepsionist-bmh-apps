@@ -6,6 +6,7 @@ import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateD
 import { db } from "@/lib/firebase";
 import { Surat, SuratInput } from "@/lib/schema-pesan";
 import SuratTable from "@/components/pesan/SuratTable";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import SuratForm from "@/components/pesan/SuratForm";
 import SuratDetailModal from "@/components/pesan/SuratDetailModal";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,20 @@ export default function SuratPage() {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [editingData, setEditingData] = useState<Surat | null>(null);
   const [viewingData, setViewingData] = useState<Surat | null>(null);
+  const [confirmState, setConfirmState] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    onConfirm: () => void;
+    confirmText?: string;
+    cancelText?: string;
+    variant?: "destructive" | "default" | "success";
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+    onConfirm: () => {},
+  });
 
   useEffect(() => {
     const q = query(collection(db, "surat"), orderBy("createdAt", "desc"));
@@ -65,7 +80,7 @@ export default function SuratPage() {
     return matchesSearch && matchesDate && matchesMonth;
   });
 
-  const handleAdd = async (data: SuratInput) => {
+  const executeSave = async (data: SuratInput) => {
     try {
       if (editingData) {
         await updateDoc(doc(db, "surat", editingData.id), {
@@ -85,10 +100,34 @@ export default function SuratPage() {
     }
   };
 
-  const handleDelete = async (idStr: string) => {
-    if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-      await deleteDoc(doc(db, "surat", idStr));
+  const handleAdd = async (data: SuratInput) => {
+    if (editingData) {
+      setConfirmState({
+        isOpen: true,
+        title: "Simpan Perubahan?",
+        description: "Apakah Anda yakin ingin menyimpan perubahan pada data surat masuk ini?",
+        confirmText: "Simpan",
+        cancelText: "Batal",
+        variant: "success",
+        onConfirm: () => executeSave(data),
+      });
+    } else {
+      await executeSave(data);
     }
+  };
+
+  const handleDelete = async (idStr: string) => {
+    setConfirmState({
+      isOpen: true,
+      title: "Hapus Data Surat Masuk",
+      description: "Apakah Anda yakin ingin menghapus data ini secara permanen? Tindakan ini tidak dapat dibatalkan.",
+      confirmText: "Hapus",
+      cancelText: "Batal",
+      variant: "destructive",
+      onConfirm: async () => {
+        await deleteDoc(doc(db, "surat", idStr));
+      },
+    });
   };
 
   const handleExportExcel = () => {
@@ -212,6 +251,17 @@ export default function SuratPage() {
         isOpen={isDetailOpen}
         onClose={() => setIsDetailOpen(false)}
         data={viewingData}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        onClose={() => setConfirmState((prev) => ({ ...prev, isOpen: false }))}
+        title={confirmState.title}
+        description={confirmState.description}
+        onConfirm={confirmState.onConfirm}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        variant={confirmState.variant}
       />
     </div>
   );
