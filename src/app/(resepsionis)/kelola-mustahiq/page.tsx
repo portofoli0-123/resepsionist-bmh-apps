@@ -61,6 +61,7 @@ export default function KelolaMustahiqPage() {
     const matchesSearch = 
       item.nama.toLowerCase().includes(search.toLowerCase()) || 
       item.nik.toLowerCase().includes(search.toLowerCase()) ||
+      (item.noKK || "").toLowerCase().includes(search.toLowerCase()) ||
       (item.jenisPenyaluran || item.alamat || "").toLowerCase().includes(search.toLowerCase());
     
     let matchesDate = true;

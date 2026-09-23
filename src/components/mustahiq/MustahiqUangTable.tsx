@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { MustahiqUang } from "@/lib/schema";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, MoreHorizontal, Eye } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -14,6 +14,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -41,6 +52,7 @@ interface MustahiqUangTableProps {
 export default function MustahiqUangTable({ data, loading, onEdit, onDelete }: MustahiqUangTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState<number | "all">(10);
+  const [viewItem, setViewItem] = useState<MustahiqUang | null>(null);
 
   // Reset to page 1 when data length changes
   useEffect(() => {
@@ -108,6 +120,7 @@ export default function MustahiqUangTable({ data, loading, onEdit, onDelete }: M
               <TableRow>
                 <TableHead className="font-semibold font-serif">Nama</TableHead>
                 <TableHead className="font-semibold font-serif">NIK</TableHead>
+                <TableHead className="font-semibold font-serif">No. KK</TableHead>
                 <TableHead className="font-semibold font-serif">Jenis Penyaluran</TableHead>
                 <TableHead className="font-semibold font-serif">Nominal</TableHead>
                 <TableHead className="font-semibold font-serif">Tanggal</TableHead>
@@ -120,6 +133,7 @@ export default function MustahiqUangTable({ data, loading, onEdit, onDelete }: M
                 <TableRow key={item.id} className="hover:bg-muted/50 transition-colors">
                   <TableCell className="text-foreground font-medium">{item.nama}</TableCell>
                   <TableCell className="text-muted-foreground text-sm font-mono">{item.nik}</TableCell>
+                  <TableCell className="text-muted-foreground text-sm font-mono">{item.noKK || "-"}</TableCell>
                   <TableCell className="text-muted-foreground max-w-xs truncate">{(item as any).jenisPenyaluran || item.alamat || "-"}</TableCell>
                   <TableCell className="text-emerald-700 dark:text-emerald-400 font-bold">{formatCurrency(item.nominal)}</TableCell>
                   <TableCell className="text-muted-foreground text-sm">
@@ -131,26 +145,36 @@ export default function MustahiqUangTable({ data, loading, onEdit, onDelete }: M
                   </TableCell>
                   <TableCell className="text-muted-foreground text-sm">{item.jam || "-"}</TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => onEdit(item)}
-                        className="text-muted-foreground hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30"
-                        title="Edit Data"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => onDelete(item.id)}
-                        className="text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30"
-                        title="Hapus Data"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0 hover:bg-muted">
+                          <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent align="end" className="w-36 p-1 flex flex-col gap-1">
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start h-8 px-2 text-sm font-medium"
+                          onClick={() => setViewItem(item)}
+                        >
+                          <Eye className="w-4 h-4 mr-2" /> View Detail
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start h-8 px-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/30"
+                          onClick={() => onEdit(item)}
+                        >
+                          <Edit2 className="w-4 h-4 mr-2" /> Edit
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start h-8 px-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/30"
+                          onClick={() => onDelete(item.id)}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" /> Delete
+                        </Button>
+                      </PopoverContent>
+                    </Popover>
                   </TableCell>
                 </TableRow>
               ))}
@@ -229,6 +253,53 @@ export default function MustahiqUangTable({ data, loading, onEdit, onDelete }: M
           </PaginationContent>
         </Pagination>
       </div>
+
+      {/* Dialog for View Detail */}
+      <Dialog open={!!viewItem} onOpenChange={() => setViewItem(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-xl text-emerald-800 dark:text-emerald-500">Detail Mustahiq</DialogTitle>
+          </DialogHeader>
+          {viewItem && (
+            <div className="space-y-4 pt-4">
+              <div className="grid grid-cols-3 gap-2 text-sm border-b pb-2 border-border">
+                <span className="font-semibold text-muted-foreground">Nama</span>
+                <span className="col-span-2 font-medium">{viewItem.nama}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-sm border-b pb-2 border-border">
+                <span className="font-semibold text-muted-foreground">NIK</span>
+                <span className="col-span-2 font-mono">{viewItem.nik}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-sm border-b pb-2 border-border">
+                <span className="font-semibold text-muted-foreground">No. KK</span>
+                <span className="col-span-2 font-mono">{viewItem.noKK || "-"}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-sm border-b pb-2 border-border">
+                <span className="font-semibold text-muted-foreground">Jenis Penyaluran</span>
+                <span className="col-span-2">{(viewItem as any).jenisPenyaluran || viewItem.alamat || "-"}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-sm border-b pb-2 border-border">
+                <span className="font-semibold text-muted-foreground">Nominal</span>
+                <span className="col-span-2 text-emerald-700 dark:text-emerald-400 font-bold">{formatCurrency(viewItem.nominal)}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-sm border-b pb-2 border-border">
+                <span className="font-semibold text-muted-foreground">Tanggal</span>
+                <span className="col-span-2">
+                  {viewItem.tanggal
+                    ? format(new Date(viewItem.tanggal), "dd MMMM yyyy", { locale: id })
+                    : viewItem.createdAt
+                      ? format(viewItem.createdAt.toDate(), "dd MMMM yyyy", { locale: id })
+                      : "-"}
+                </span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-sm pb-2">
+                <span className="font-semibold text-muted-foreground">Jam</span>
+                <span className="col-span-2">{viewItem.jam || "-"}</span>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
