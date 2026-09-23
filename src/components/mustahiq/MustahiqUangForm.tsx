@@ -67,6 +67,7 @@ export default function MustahiqUangForm({ isOpen, onClose, onSubmit, initialDat
     defaultValues: {
       nama: "",
       nik: "",
+      noKK: "",
       jenisPenyaluran: "",
       nominal: 0,
       tanggal: getTodayDate(),
@@ -79,6 +80,7 @@ export default function MustahiqUangForm({ isOpen, onClose, onSubmit, initialDat
       reset({
         nama: initialData.nama,
         nik: initialData.nik,
+        noKK: (initialData as any).noKK || "",
         jenisPenyaluran: (initialData as any).jenisPenyaluran || (initialData as any).alamat || "-",
         nominal: initialData.nominal,
         tanggal: initialData.tanggal || getTodayDate(),
@@ -88,6 +90,7 @@ export default function MustahiqUangForm({ isOpen, onClose, onSubmit, initialDat
       reset({
         nama: "",
         nik: "",
+        noKK: "",
         jenisPenyaluran: "",
         nominal: 0,
         tanggal: getTodayDate(),
@@ -236,6 +239,16 @@ export default function MustahiqUangForm({ isOpen, onClose, onSubmit, initialDat
                 disabled={isBusy}
               />
               {errors.nik && <p className="text-xs text-red-500">{errors.nik.message as string}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="noKK">No. Kartu Keluarga (Opsional)</Label>
+              <Input
+                id="noKK"
+                placeholder="Masukkan No. Kartu Keluarga..."
+                {...register("noKK")}
+                disabled={isBusy}
+              />
             </div>
 
             <div className="space-y-2">
